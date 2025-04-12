@@ -1,0 +1,4 @@
+.footer-section a:hover {
+    color: #0d6efd;
+    transition: color 0.2s;
+  }
