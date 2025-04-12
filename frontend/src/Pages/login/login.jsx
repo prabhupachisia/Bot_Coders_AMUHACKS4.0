@@ -14,10 +14,9 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("localhost:5000/v1/auth/login", {
-        username: email,
+      const response = await axios.post("http://localhost:5000/v1/auth/login", {
+        email: email,
         password,
-        rememberMe,
       });
 
       if (response.status === 200) {
@@ -30,7 +29,7 @@ const Login = () => {
         const tokenExpiration = new Date(tokens.access.expires);
         localStorage.setItem("accessTokenExpiration", tokenExpiration);
 
-        // window.location.href = "/dashboard";
+        window.location.href = "/";
       }
     } catch (error) {
       console.error("Login failed", error.response || error);
