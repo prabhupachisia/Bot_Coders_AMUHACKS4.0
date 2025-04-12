@@ -1,18 +1,26 @@
 const Joi = require('joi');
 const { password } = require('./custom.validation');
+const { roles } = require('../config/roles');
 
 const register = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    email: Joi.string().required().email(), // Just validate if it's a valid email
+    password: Joi.string().required().custom(password), // Password validation
+    name: Joi.string().required(), // Name validation
+    role: Joi.string().valid(...roles).default('patient'), // Role validation
+    phone: Joi.string().required(), // Phone validation
+    street: Joi.string().required(), // Address validation
+    city: Joi.string().required(),
+    state: Joi.string().required(),
+    country: Joi.string().required(),
+    pinCode: Joi.string().required(),
   }),
 };
 
 const login = {
   body: Joi.object().keys({
     email: Joi.string().required(),
-    password: Joi.string().required(),
+    password: Joi.string().required().custom(password),
   }),
 };
 

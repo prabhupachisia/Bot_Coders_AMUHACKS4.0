@@ -2,8 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 // import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Navbar from './Components/Navbar/Navbar';
+import Home from './Pages/HomePage/Homepage';
+// src/index.js
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'animate.css/animate.min.css'; // correct path
+
+
 import Login from "./Pages/login/login";
 import Home from './Pages/HomePage/Homepage';
 // src/index.js
@@ -14,6 +21,11 @@ import 'animate.css/animate.min.css'; // correct path
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  <div>
+
+    <Navbar/>
+    <Home/>
+  </div>
   <div>
   <Login/></div>
   
