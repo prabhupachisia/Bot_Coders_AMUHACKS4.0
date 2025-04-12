@@ -1,73 +1,127 @@
 import React from "react";
-import "./login.css"; // Contains padding for login content
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 
 const Login = () => {
+  const primaryColor = "#17a2b8"; // Bootstrap info color (teal)
+
   return (
-    <div className="login-page">
-      <div className="row mt-3">
-        <h1 className="col-6 offset-3 text-center">Login</h1>
-        <div className="col-10 offset-1">
-          <form
-            action="/users/login"
-            method="post"
-            noValidate
-            className="needs-validation"
+    <div
+      className="d-flex align-items-center justify-content-center vh-100"
+      style={{
+        background: "linear-gradient(to right, #e0f7fa, #ffffff)",
+      }}
+    >
+      <div
+        className="card shadow-lg p-4"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+          borderRadius: "1rem",
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        <div className="card-body">
+          <h2
+            className="text-center mb-4 fw-bold"
+            style={{ color: primaryColor }}
           >
-            {/* Email Field with Icon */}
+            Welcome Back!
+          </h2>
+
+          <form action="/users/login" method="post" noValidate>
+            {/* Email */}
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email
+              <label
+                htmlFor="username"
+                className="form-label fw-semibold"
+                style={{ color: "#333" }}
+              >
+                Email address
               </label>
               <div className="input-group">
+                <span className="input-group-text bg-white">
+                  <MdEmail style={{ color: primaryColor }} />
+                </span>
                 <input
-                  type="text"
+                  type="email"
+                  className="form-control"
                   id="username"
                   name="username"
-                  className="form-control"
+                  placeholder="Enter your email"
                   required
                 />
-                <span className="input-group-text">
-                  <MdEmail />
-                </span>
               </div>
-              <div className="valid-feedback">Looks Good</div>
             </div>
 
-            {/* Password Field with Icon */}
+            {/* Password */}
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">
+              <label
+                htmlFor="password"
+                className="form-label fw-semibold"
+                style={{ color: "#333" }}
+              >
                 Password
               </label>
               <div className="input-group">
+                <span className="input-group-text bg-white">
+                  <RiLockPasswordFill style={{ color: primaryColor }} />
+                </span>
                 <input
                   type="password"
+                  className="form-control"
                   id="password"
                   name="password"
-                  className="form-control"
+                  placeholder="Enter your password"
                   required
                 />
-                <span className="input-group-text">
-                  <RiLockPasswordFill />
-                </span>
               </div>
             </div>
 
-            {/* Remember Me Checkbox */}
-            <div className="mb-3 form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="rememberMe"
-                name="rememberMe"
-              />
-              <label className="form-check-label" htmlFor="rememberMe">
-                Remember me
-              </label>
+        {/* Remember me */}
+<div className="d-flex align-items-center gap-2 mb-3">
+  <input
+    className="form-check-input m-0"
+    type="checkbox"
+    id="rememberMe"
+    name="rememberMe"
+    style={{ transform: "scale(1.1)" }} // optional: makes switch slightly bigger
+  />
+  <label
+    className="form-check-label mb-0"
+    htmlFor="rememberMe"
+    style={{ color: "#555", fontSize: "0.95rem" }}
+  >
+    Remember Me
+  </label>
+</div>
+
+            {/* Submit Button */}
+            <div className="d-grid">
+              <button
+                type="submit"
+                className="btn"
+                style={{
+                  backgroundColor: primaryColor,
+                  color: "#fff",
+                  fontWeight: "600",
+                  transition: "0.3s ease",
+                }}
+              >
+                Log In
+              </button>
             </div>
 
-            <button className="btn btn-success">Login</button>
+            {/* Register Link */}
+            <div className="text-center mt-3">
+              <a
+                href="/register"
+                className="text-decoration-none"
+                style={{ color: primaryColor }}
+              >
+                Don't have an account? Register
+              </a>
+            </div>
           </form>
         </div>
       </div>

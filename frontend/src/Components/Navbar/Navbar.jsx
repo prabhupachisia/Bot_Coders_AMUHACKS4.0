@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaUserCircle, FaSearch, FaHeartbeat } from 'react-icons/fa';
 
 const Navbar = () => {
@@ -9,14 +10,14 @@ const Navbar = () => {
     >
       <div className="container-fluid">
         {/* Logo */}
-        <a
+        <Link
           className="navbar-brand d-flex align-items-center"
-          href="/"
-          style={{ color: '#0d6efd', fontWeight: 'bold', fontSize: '1.5rem' }}
+          to="/"
+          style={{ color: '#0d6efd', fontWeight: 'bold', fontSize: '1.5rem', textDecoration: 'none' }}
         >
           <FaHeartbeat className="me-2" style={{ color: '#0d6efd' }} />
           CareConnect
-        </a>
+        </Link>
 
         {/* Toggle Button */}
         <button
@@ -36,9 +37,9 @@ const Navbar = () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {/* Home */}
             <li className="nav-item">
-              <a className="nav-link" href="/" style={{ color: '#333' }}>
+              <Link className="nav-link" to="/" style={{ color: '#333' }}>
                 Home
-              </a>
+              </Link>
             </li>
 
             {/* Consultations Dropdown */}
@@ -54,30 +55,30 @@ const Navbar = () => {
               </button>
               <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
                 <li>
-                  <a className="dropdown-item" href="/new-consultation">
+                  <Link className="dropdown-item" to="/new-consultation">
                     New Consultation
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/history">
+                  <Link className="dropdown-item" to="/history">
                     History
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
 
             {/* Services */}
             <li className="nav-item">
-              <a className="nav-link" href="/services" style={{ color: '#333' }}>
+              <Link className="nav-link" to="/services" style={{ color: '#333' }}>
                 Services
-              </a>
+              </Link>
             </li>
 
             {/* Contact */}
             <li className="nav-item">
-              <a className="nav-link" href="/contact" style={{ color: '#333' }}>
+              <Link className="nav-link" to="/contact" style={{ color: '#333' }}>
                 Contact
-              </a>
+              </Link>
             </li>
 
             {/* Careers Dropdown */}
@@ -93,14 +94,14 @@ const Navbar = () => {
               </button>
               <ul className="dropdown-menu" aria-labelledby="careersDropdown">
                 <li>
-                  <a className="dropdown-item" href="/careers/independent-doctor">
-                    Independent Doctor
-                  </a>
+                  <Link className="dropdown-item" to="/careers/doctor-reg">
+                    Doctor
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="/careers/hospitals">
+                  <Link className="dropdown-item" to="/careers/hospitals-reg">
                     Hospitals
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
@@ -121,12 +122,12 @@ const Navbar = () => {
 
           {/* Login and Register */}
           <div className="d-flex gap-2 me-3">
-            <a href="/login" className="btn btn-outline-success">
+            <Link to="/login" className="btn btn-outline-success">
               Login
-            </a>
-            <a href="/register" className="btn btn-outline-primary">
+            </Link>
+            <Link to="/register" className="btn btn-outline-primary">
               Register
-            </a>
+            </Link>
           </div>
 
           {/* Profile Dropdown */}
@@ -143,22 +144,22 @@ const Navbar = () => {
             </button>
             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
               <li>
-                <a className="dropdown-item" href="/dashboard">
+                <Link className="dropdown-item" to="/dashboard">
                   Dashboard
-                </a>
+                </Link>
               </li>
               <li>
-                <a className="dropdown-item" href="/settings">
+                <Link className="dropdown-item" to="/settings">
                   Settings
-                </a>
+                </Link>
               </li>
               <li>
                 <hr className="dropdown-divider" />
               </li>
               <li>
-                <a className="dropdown-item" href="/logout">
+                <Link className="dropdown-item" to="/logout">
                   Logout
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

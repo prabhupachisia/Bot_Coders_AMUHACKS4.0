@@ -1,18 +1,19 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
-import './footer.css'
+import './footer.css';
+
 const Footer = () => {
   return (
-    <footer className="footer-section bg-dark text-light py-4">
-      <div className="container text-center">
-        <p className="mb-2">&copy; {new Date().getFullYear()} CareConnect. All rights reserved.</p>
-        <div className="d-flex justify-content-center gap-4 mb-2">
-          <a href="/" className="text-light fs-5"><FaFacebookF /></a>
-          <a href="/" className="text-light fs-5"><FaTwitter /></a>
-          <a href="/" className="text-light fs-5"><FaInstagram /></a>
-          <a href="/" className="text-light fs-5"><FaLinkedin /></a>
+    <footer className="footer-section">
+      <div className="footer-container">
+        <p className="footer-text">&copy; {new Date().getFullYear()} <span className="brand-name">CareConnect</span>. All rights reserved.</p>
+        <div className="footer-icons">
+          <a href="/" className="social-icon" aria-label="Facebook"><FaFacebookF /></a>
+          <a href="/" className="social-icon" aria-label="Twitter"><FaTwitter /></a>
+          <a href="/" className="social-icon" aria-label="Instagram"><FaInstagram /></a>
+          <a href="/" className="social-icon" aria-label="LinkedIn"><FaLinkedin /></a>
         </div>
-        <p className="text-muted small">Contact: support@Careconnect.com | Phone: +91-9876543210</p>
+        <p className="footer-contact">Contact: <a href="mailto:support@Careconnect.com">support@Careconnect.com</a> | Phone: +91-9876543210</p>
       </div>
     </footer>
   );
