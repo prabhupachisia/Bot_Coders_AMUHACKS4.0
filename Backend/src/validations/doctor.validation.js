@@ -1,12 +1,13 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
+const specializations = require('../config/doctors');
 
 const createDoctor = {
     params: Joi.object().keys({
         hospitalId: Joi.string().custom(objectId).required(),
     }),
     body: Joi.object().keys({
-        specialization: Joi.string().required(),
+        specialization: Joi.string().required().valid(...specializations),
         experience: Joi.number().required(),
         education: Joi.string().required(),
         fees: Joi.number().required(),
@@ -26,7 +27,7 @@ const updateDoctor = {
     }),
     body: Joi.object()
         .keys({
-            specialization: Joi.string(),
+            specialization: Joi.string().valid(...specializations),
             experience: Joi.number(),
             education: Joi.string(),
             fees: Joi.number(),

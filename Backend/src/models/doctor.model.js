@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
+const specializations = require('../config/doctors');
 
 const doctorSchema = mongoose.Schema({
     hospital: {
@@ -9,6 +10,7 @@ const doctorSchema = mongoose.Schema({
     },
     specialization: {
         type: String,
+        enum: specializations,
         required: true,
     },
     experience: {
