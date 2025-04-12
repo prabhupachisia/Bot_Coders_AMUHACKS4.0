@@ -11,29 +11,34 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Load remembered email on mount
+  // Load remembered email and password on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedPassword = localStorage.getItem("rememberedPassword");
     const savedRememberMe = localStorage.getItem("rememberMe") === "true";
 
-    if (savedRememberMe && savedEmail) {
+    if (savedRememberMe && savedEmail && savedPassword) {
       setEmail(savedEmail);
+      setPassword(savedPassword);
       setRememberMe(true);
     }
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      // Save or clear remembered email based on checkbox
-      if (rememberMe) {
-        localStorage.setItem("rememberedEmail", email);
-        localStorage.setItem("rememberMe", "true");
-      } else {
-        localStorage.removeItem("rememberedEmail");
-        localStorage.setItem("rememberMe", "false");
-      }
 
+    // Save or clear remembered credentials based on checkbox
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+      localStorage.setItem("rememberedPassword", password);
+      localStorage.setItem("rememberMe", "true");
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+      localStorage.setItem("rememberMe", "false");
+    }
+
+    try {
       const response = await axios.post("http://localhost:5000/v1/auth/login", {
         email,
         password,
@@ -47,7 +52,6 @@ const Login = () => {
         localStorage.setItem("refreshToken", tokens.refresh.token);
         localStorage.setItem("accessTokenExpiration", new Date(tokens.access.expires));
 
-        // Redirect after login
         window.location.href = "/";
       }
     } catch (error) {
