@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const doctorRoute = require('./doctor.route');
 const consultRoute = require('./consult.route');
+const prescriptionRoute = require('./prescription.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -24,6 +25,9 @@ const defaultRoutes = [
   {
     path: '/consult',
     route: consultRoute,
+  }, {
+    path: '/prescription',
+    route: prescriptionRoute,
   }
 ];
 

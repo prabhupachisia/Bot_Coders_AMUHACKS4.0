@@ -2,8 +2,10 @@ const Joi = require('joi');
 
 // Validation for creating a new consultation
 const createConsult = {
+    params: Joi.object().keys({
+        doctorId: Joi.string().required().length(24),
+    }),
     body: Joi.object().keys({
-        doctor: Joi.string().required().length(24),
         description: Joi.string().required(),
         date: Joi.date().required(),
         time: Joi.string().required(),
@@ -15,16 +17,14 @@ const createConsult = {
 const updateConsult = {
     body: Joi.object()
         .keys({
-            doctor: Joi.string().length(24),
             description: Joi.string(),
             date: Joi.date(),
             time: Joi.string(),
             status: Joi.string().valid('pending', 'completed', 'cancelled'),
         })
-        .min(1), // At least one field must be provided for update
+        .min(1),
 };
 
-// Validation for getting or deleting consultations by ID
 const consultIdValidation = {
     params: Joi.object().keys({
         consultId: Joi.string().required().length(24),

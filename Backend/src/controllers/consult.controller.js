@@ -4,10 +4,16 @@ const { Consult } = require('../models');
 
 // Create a new consultation
 const createConsult = catchAsync(async (req, res) => {
+    const { doctorId } = req.params;
+    const photoUrls = req.files?.map(file => file.path) || [];
+
     const consultBody = {
         ...req.body,
-        patient: req.user.id, // Patient ID comes from req.user
+        doctor: doctorId,
+        patient: req.user.id,
+        photos: photoUrls,
     };
+
     const consult = await Consult.create(consultBody);
     res.status(httpStatus.CREATED).send(consult);
 });
@@ -28,12 +34,20 @@ const getConsultById = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(consult);
 });
 
-// Update a consultation by ID for the logged-in patient
+// Update a consultation by ID
 const updateConsult = catchAsync(async (req, res) => {
     const { consultId } = req.params;
+    const updatedFields = {
+        ...req.body,
+    };
+    if (req.files?.length) {
+        const photoUrls = req.files.map(file => file.path);
+        updatedFields.photos = photoUrls;
+    }
+
     const updatedConsult = await Consult.findOneAndUpdate(
         { _id: consultId, patient: req.user.id },
-        req.body,
+        updatedFields,
         { new: true, runValidators: true }
     );
     if (!updatedConsult) {
@@ -42,7 +56,6 @@ const updateConsult = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(updatedConsult);
 });
 
-// Delete a consultation by ID for the logged-in patient
 const deleteConsult = catchAsync(async (req, res) => {
     const { consultId } = req.params;
     const consult = await Consult.findOneAndDelete({ _id: consultId, patient: req.user.id });
