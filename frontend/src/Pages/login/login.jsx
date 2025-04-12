@@ -1,13 +1,11 @@
-import React from 'react';
-import './login.css'; // Contains padding for login content
+import React from "react";
+import "./login.css"; // Contains padding for login content
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import Navbar from '../../Components/Navbar/Navbar';
 
 const Login = () => {
   return (
     <div className="login-page">
-      <Navbar />
       <div className="row mt-3">
         <h1 className="col-6 offset-3 text-center">Login</h1>
         <div className="col-10 offset-1">
@@ -19,7 +17,9 @@ const Login = () => {
           >
             {/* Email Field with Icon */}
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
+              <label htmlFor="email" className="form-label">
+                Email
+              </label>
               <div className="input-group">
                 <input
                   type="text"
@@ -37,7 +37,9 @@ const Login = () => {
 
             {/* Password Field with Icon */}
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <div className="input-group">
                 <input
                   type="password"
@@ -60,7 +62,9 @@ const Login = () => {
                 id="rememberMe"
                 name="rememberMe"
               />
-              <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
+              <label className="form-check-label" htmlFor="rememberMe">
+                Remember me
+              </label>
             </div>
 
             <button className="btn btn-success">Login</button>
