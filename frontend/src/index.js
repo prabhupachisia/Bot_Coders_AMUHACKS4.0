@@ -4,10 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Navbar from './Components/Navbar/Navbar';
+import Login from "./Pages/login/login";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Navbar/>
+  <div>
+  <Login/></div>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function
