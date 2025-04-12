@@ -16,7 +16,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<UserRegister />} />
-          
+
           {/* Add more routes as needed */}
           <Route path="/careers/doctor-reg" element={<DocRegister />} />
           <Route path="/careers/hospitals-reg" element={<HosRegister />} />

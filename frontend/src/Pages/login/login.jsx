@@ -1,34 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 
 const Login = () => {
-  const primaryColor = "#17a2b8"; // Old login's Bootstrap info color (teal)
+  const primaryColor = "#17a2b8";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Load remembered email on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedRememberMe = localStorage.getItem("rememberMe") === "true";
+
+    if (savedRememberMe && savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Save or clear remembered email based on checkbox
+      if (rememberMe) {
+        localStorage.setItem("rememberedEmail", email);
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("rememberedEmail");
+        localStorage.setItem("rememberMe", "false");
+      }
+
       const response = await axios.post("http://localhost:5000/v1/auth/login", {
-        email: email,
+        email,
         password,
       });
 
       if (response.status === 200) {
-        console.log("Login successful", response.data);
         const { user, tokens } = response.data;
 
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("accessToken", tokens.access.token);
         localStorage.setItem("refreshToken", tokens.refresh.token);
-        const tokenExpiration = new Date(tokens.access.expires);
-        localStorage.setItem("accessTokenExpiration", tokenExpiration);
+        localStorage.setItem("accessTokenExpiration", new Date(tokens.access.expires));
 
+        // Redirect after login
         window.location.href = "/";
       }
     } catch (error) {
@@ -40,9 +59,7 @@ const Login = () => {
   return (
     <div
       className="d-flex align-items-center justify-content-center vh-100"
-      style={{
-        background: "linear-gradient(to right, #e0f7fa, #ffffff)",
-      }}
+      style={{ background: "linear-gradient(to right, #e0f7fa, #ffffff)" }}
     >
       <div
         className="card shadow-lg p-4"
@@ -54,21 +71,14 @@ const Login = () => {
         }}
       >
         <div className="card-body">
-          <h2
-            className="text-center mb-4 fw-bold"
-            style={{ color: primaryColor }}
-          >
+          <h2 className="text-center mb-4 fw-bold" style={{ color: primaryColor }}>
             Welcome Back!
           </h2>
 
           <form onSubmit={handleSubmit} noValidate className="needs-validation">
             {/* Email */}
             <div className="mb-3">
-              <label
-                htmlFor="username"
-                className="form-label fw-semibold"
-                style={{ color: "#333" }}
-              >
+              <label htmlFor="username" className="form-label fw-semibold" style={{ color: "#333" }}>
                 Email address
               </label>
               <div className="input-group">
@@ -89,11 +99,7 @@ const Login = () => {
 
             {/* Password */}
             <div className="mb-3">
-              <label
-                htmlFor="password"
-                className="form-label fw-semibold"
-                style={{ color: "#333" }}
-              >
+              <label htmlFor="password" className="form-label fw-semibold" style={{ color: "#333" }}>
                 Password
               </label>
               <div className="input-group">
