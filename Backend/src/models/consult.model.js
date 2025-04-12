@@ -16,19 +16,19 @@ const consultSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    date: {
-        type: Date,
-        required: true,
-    },
-    time: {
-        type: String,
-        required: true,
-    },
     status: {
         type: String,
         enum: ['pending', 'completed', 'cancelled'],
         default: 'pending',
     },
+    photos: [{
+        type: String // Will store Cloudinary URLs
+    }]
+}, {
+    timestamps: true, // Automatically adds createdAt and updatedAt fields
 });
+
+consultSchema.plugin(toJSON);
+consultSchema.plugin(paginate);
 
 module.exports = mongoose.model('Consult', consultSchema);
