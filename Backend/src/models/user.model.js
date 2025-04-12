@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 
+
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -38,11 +39,32 @@ const userSchema = mongoose.Schema(
     role: {
       type: String,
       enum: roles,
-      default: 'user',
+      default: 'patient',
     },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    street: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    pinCode: {
+      type: String,
+      required: true,
     },
   },
   {
