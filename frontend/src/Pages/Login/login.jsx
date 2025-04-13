@@ -49,14 +49,25 @@ const Login = () => {
       if (response.status === 200) {
         const { user, tokens } = response.data;
 
+        // Save user and tokens
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("accessToken", tokens.access.token);
         localStorage.setItem("refreshToken", tokens.refresh.token);
         localStorage.setItem("accessTokenExpiration", new Date(tokens.access.expires));
+        localStorage.setItem("role", user.role); // Save role for future use
 
-        // ✅ Redirect to UserHome
-        navigate("/user-home");
-        window.location.reload();
+        // ✅ Redirect based on role
+        const role = user.role.toLowerCase();
+
+        if (role === "doctor") {
+          navigate("/doc-home");
+        } else if (role === "hospital") {
+          navigate("/hos-home");
+        } else {
+          navigate("/user-home");
+        }
+
+        window.location.reload(); // Optional: reload to re-initialize any protected routes
       }
     } catch (error) {
       console.error("Login failed", error.response || error);
