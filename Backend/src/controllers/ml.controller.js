@@ -1,6 +1,6 @@
 // controllers/mlUploadController.js
 const axios = require('axios');
-const { cloudinary } = require('../config/cloudinary.config');
+const { cloudinary } = require('../config/cloudinary');
 const MLModel = require('../models/ml.model');
 
 const uploadMLPhotos = async (req, res) => {
@@ -49,4 +49,8 @@ const uploadMLPhotos = async (req, res) => {
             details: error.response?.data || 'Check server logs for details'
         });
     }
+};
+
+module.exports = {
+    uploadMLPhotos
 };
