@@ -102,12 +102,12 @@ const DocList = () => {
   const handleDeleteDoctor = async (id) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-
+  
       if (!accessToken) {
         alert("Authentication required. Please login again.");
         return;
       }
-
+  
       const response = await axios.delete(
         `http://localhost:5000/v1/doctors/${id}`,
         {
@@ -117,10 +117,14 @@ const DocList = () => {
           },
         }
       );
-
+  
       if (response.status === 200) {
         alert("Doctor deleted successfully");
-        window.location.reload(); // Add this line to refresh the page
+  
+        // Instead of reloading the page, just update the state
+        setDoctors((prevDoctors) =>
+          prevDoctors.filter((doctor) => doctor.id !== id)
+        );
       }
     } catch (error) {
       console.error("Delete error:", error);
@@ -129,6 +133,7 @@ const DocList = () => {
       );
     }
   };
+  
 
   if (loading) {
     return (

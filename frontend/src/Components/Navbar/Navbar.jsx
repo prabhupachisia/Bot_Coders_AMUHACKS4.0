@@ -96,7 +96,7 @@ const Navbar = () => {
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
                   <li><Link className="dropdown-item" to="/user-home">New Consultation</Link></li>
-                  <li><Link className="dropdown-item" to="/user-home">History</Link></li>
+                  <li><Link className="dropdown-item" to="/patient/consults">Medical History</Link></li>
                 </ul>
               </li>
             )}
@@ -121,8 +121,8 @@ const Navbar = () => {
                   Careers
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="careersDropdown">
-                  <li><Link className="dropdown-item" to="/careers/doctor-reg">Doctor</Link></li>
-                  <li><Link className="dropdown-item" to="/careers/hospitals-reg">Hospitals</Link></li>
+                  <li><Link className="dropdown-item" to="/careers/doctor-reg">For Doctor</Link></li>
+                  <li><Link className="dropdown-item" to="/careers/hospitals-reg">For Hospitals</Link></li>
                 </ul>
               </li>
             )}

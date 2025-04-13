@@ -1,9 +1,13 @@
 import React from "react";
 import "animate.css";
 import { useNavigate } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 
 const ConsultationOptions = () => {
   const navigate = useNavigate();
+
+  const { ref: hospitalRef, inView: hospitalVisible } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const { ref: doctorRef, inView: doctorVisible } = useInView({ triggerOnce: true, threshold: 0.2 });
 
   const handleRedirect = (type) => {
     const token = localStorage.getItem("accessToken");
@@ -41,7 +45,11 @@ const ConsultationOptions = () => {
       <div className="container">
         <h2 className="text-center mb-4 fw-bold">Choose Your Consultation Type</h2>
         <div className="row text-center">
-          <div className="col-md-6 mb-3 animate__animated animate__fadeInLeft">
+          {/* Hospital Card */}
+          <div
+            ref={hospitalRef}
+            className={`col-md-6 mb-3 ${hospitalVisible ? 'animate__animated animate__fadeInLeft' : ''}`}
+          >
             <div className="card shadow-sm p-4 h-100">
               <h4>Consult Hospital Near You</h4>
               <p className="text-muted">
@@ -55,7 +63,12 @@ const ConsultationOptions = () => {
               </button>
             </div>
           </div>
-          <div className="col-md-6 mb-3 animate__animated animate__fadeInRight">
+
+          {/* Doctor Card */}
+          <div
+            ref={doctorRef}
+            className={`col-md-6 mb-3 ${doctorVisible ? 'animate__animated animate__fadeInRight' : ''}`}
+          >
             <div className="card shadow-sm p-4 h-100">
               <h4>Personal Doctor Consultation</h4>
               <p className="text-muted">

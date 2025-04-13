@@ -46,33 +46,38 @@ const DocRegister = () => {
     }));
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      // Get hospitalId from localStorage or fallback to default
       const user = JSON.parse(localStorage.getItem("user"));
       const hospitalId = user?.id || "67fb6b4daec134dda70de5ae";
-
-      // Construct API payload
+      const role = user?.role;
+  
       const payload = {
         ...formData,
       };
-
-      // Make API call
+  
       await axios.post(
         `http://localhost:5000/v1/doctors/${hospitalId}`,
         payload
       );
-
+  
       alert("Doctor registered successfully");
-      navigate("/");
+  
+      // Redirect based on role
+      if (role === "hospital") {
+        navigate("/hos-home");
+      } else {
+        navigate("/");
+      }
+  
     } catch (err) {
       console.error(err);
       alert("Error registering doctor");
     }
   };
+  
 
   return (
     <Container className="form-container shadow-lg rounded-4 p-5 mt-5 bg-white">
