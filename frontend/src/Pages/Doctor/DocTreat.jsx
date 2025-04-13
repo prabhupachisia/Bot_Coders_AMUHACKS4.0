@@ -51,11 +51,45 @@ const DocTreat = () => {
     if (file) setImageFile(file);
   };
 
-  const handleImageAnalysis = () => {
+  const handleImageAnalysis = async () => {
     if (!imageFile) {
       alert("Please upload an image first.");
-    } else {
-      alert("Analyzing image using ML... (placeholder only)");
+      return;
+    }
+
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      alert("Session expired. Please log in again.");
+      localStorage.clear();
+      navigate("/login");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("consultId", consultId); // Optional if your backend uses it
+    formData.append("photos", imageFile); // ✅ Correct field name for multer
+
+    try {
+      const response = await axios.post("http://localhost:5000/v1/ml/upload-ml", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const { mlResults } = response.data;
+
+      console.log("ML Results:", mlResults);
+
+      const formatted = mlResults.map((r, i) =>
+        `Image ${i + 1}: ${r.status === "fulfilled" ? JSON.stringify(r.data) : "❌ Failed"}`
+      ).join("\n");
+
+      alert(`ML analysis complete:\n\n${formatted}`);
+    } catch (error) {
+      console.error("Image analysis failed:", error);
+      alert("Something went wrong while uploading or analyzing the image.");
     }
   };
 
@@ -88,7 +122,7 @@ const DocTreat = () => {
 
         {/* Image Upload Card */}
         <div className="card shadow-sm rounded-4 p-4 mb-5">
-          <h4 className="text-secondary mb-3 fw-semibold">🧠 Diagnosis Image Upload</h4>
+          <h4 className="text-secondary mb-3 fw-semibold">🧠 Diagnosis Image Upload (Eye Only)</h4>
           <div className="row g-3 align-items-center">
             <div className="col-md-8 col-sm-12">
               <input

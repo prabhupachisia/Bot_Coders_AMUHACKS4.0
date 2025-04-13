@@ -31,6 +31,9 @@ const defaultRoutes = [
   }, {
     path: '/hospital',
     route: require('./hospital.route'),
+  }, {
+    path: '/ml',
+    route: require('./ml.route'),
   }
 ];
 
