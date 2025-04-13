@@ -54,19 +54,25 @@ const createConsult = catchAsync(async (req, res) => {
 
 const getAllConsults = catchAsync(async (req, res) => {
     let query;
+
     if (req.user.role === 'patient') {
+        // For patients, fetch all consultations associated with their user ID
         query = { patient: req.user.id };
-    } else {
+    } else if (req.user.role === 'doctor') {
+        // For doctors, fetch only pending consultations associated with their doctor ID
         const doctorId = await getDoctorId(req.user.id);
         if (!doctorId) {
             return res.status(httpStatus.BAD_REQUEST).send({ message: 'Doctor profile not complete' });
         }
-        query = { doctor: doctorId };
+        query = { doctor: doctorId, status: 'pending' }; // Add filter for status: 'pending'
+    } else {
+        return res.status(httpStatus.FORBIDDEN).send({ message: 'Unauthorized access' });
     }
 
+    // Fetch consultations based on the query
     const consults = await Consult.find(query)
-        .populate('doctor patient')
-        .sort('-createdAt');
+        .populate('doctor patient') // Populate doctor and patient details
+        .sort('-createdAt'); // Sort by most recently created first
 
     res.status(httpStatus.OK).send(consults);
 });
