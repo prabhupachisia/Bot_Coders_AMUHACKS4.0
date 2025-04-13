@@ -35,7 +35,7 @@ const DocHome = () => {
 
         // Map all consults to extract patient data
         const extractedPatients = consults.map((consult) => ({
-          id: consult.patient?.id,
+          id: consult.id, // using consult ID from old DocHome logic
           name: consult.patient?.name,
           age: calculateAge(consult.patient?.createdAt),
           problemSummary: consult.description,
@@ -74,8 +74,9 @@ const DocHome = () => {
     });
   };
 
-  const handleTreatPatient = (patientId) => {
-    navigate(`/treat-patient/${patientId}`);
+  // ✅ Replaced handleTreatPatient function from old DocHome
+  const handleTreatPatient = (consultId) => {
+    navigate(`/doctor/treat/${consultId}`);
   };
 
   return (
