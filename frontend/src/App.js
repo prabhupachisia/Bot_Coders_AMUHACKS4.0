@@ -12,7 +12,10 @@ import DoctorHome from './Pages/Doctor/DocHome';        // Add this file
 import HospitalHome from './Pages/Hospital/HosHome';  // Add this file
 import DocProfile from './Pages/Doctor/DocProfile';
 import DocView from './Pages/Doctor/DocView';      // Add this file
-import DocTreat from './Pages/Doctor/DocTreat';  // Add this file
+import DocTreat from './Pages/Doctor/DocTreat';
+import UserDocCon from './Pages/User/UserDocCon/UserDocCon';  // Add this file
+import Footer from './Components/Footer/Footer';
+import UserHosCon from './Pages/User/UserHosCon/UserHosCon';  // Add this file
 
 function App() {
   return (
@@ -32,6 +35,8 @@ function App() {
           <Route path="/careers/hospitals-reg" element={<HosRegister />} />
           <Route path="/doctor/view/:consultId" element={<DocView />} />
           <Route path="/doctor/treat/:consultId" element={<DocTreat />} />
+          <Route path="/consultation/doctor" element={<UserDocCon />} />
+          <Route path="/consultation/hospital" element={<UserHosCon />} />
         </Routes>
       </div>
     </Router>

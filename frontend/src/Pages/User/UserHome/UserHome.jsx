@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Footer from '../../../Components/Footer/Footer';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Footer from "../../../Components/Footer/Footer";
 // import './UserHome.css';
 
 const UserHome = () => {
@@ -11,12 +11,12 @@ const UserHome = () => {
   const [appointments, setAppointments] = useState([]);
   const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const accessTokenExpiration = localStorage.getItem('accessTokenExpiration');
-    const userData = localStorage.getItem('user');
+    const accessToken = localStorage.getItem("accessToken");
+    const accessTokenExpiration = localStorage.getItem("accessTokenExpiration");
+    const userData = localStorage.getItem("user");
 
     const isTokenValid =
       accessToken &&
@@ -24,7 +24,7 @@ const UserHome = () => {
       new Date(accessTokenExpiration) > new Date();
 
     if (!isTokenValid) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
@@ -33,42 +33,55 @@ const UserHome = () => {
         if (userData) {
           setUser(JSON.parse(userData));
         } else {
-          throw new Error('User data not found in localStorage.');
+          throw new Error("User data not found in localStorage.");
         }
 
-        const consultsRes = await axios.get('http://localhost:5000/v1/consult', {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
+        const consultsRes = await axios.get(
+          "http://localhost:5000/v1/consult",
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
 
-        setAppointments(consultsRes.data.map(consult => ({
-          date: consult.date,
-          type: consult.type,
-          doctor: consult.doctorName,
-          status: consult.status
-        })));
+        setAppointments(
+          consultsRes.data.map((consult) => ({
+            date: consult.date,
+            type: consult.type,
+            doctor: consult.doctorName,
+            status: consult.status,
+          }))
+        );
         setConsultations(consultsRes.data);
       } catch (err) {
         console.error(err);
-        setError('Unable to connect to the server. Showing demo data.');
+        setError("Unable to connect to the server. Showing demo data.");
 
-        setUser({ name: 'Demo User' });
+        setUser({ name: "Demo User" });
         setAppointments([
           {
-            date: '2025-04-15T10:00:00',
-            type: 'Dental Checkup',
-            doctor: 'Dr. Smith',
-            status: 'confirmed'
+            date: "2025-04-15T10:00:00",
+            type: "Dental Checkup",
+            doctor: "Dr. Smith",
+            status: "confirmed",
           },
           {
-            date: '2025-04-20T14:30:00',
-            type: 'Eye Checkup',
-            doctor: 'Dr. Watson',
-            status: 'pending'
-          }
+            date: "2025-04-20T14:30:00",
+            type: "Eye Checkup",
+            doctor: "Dr. Watson",
+            status: "pending",
+          },
         ]);
         setConsultations([
-          { id: 1, name: 'General Medicine', description: 'Consult a general physician for common ailments.' },
-          { id: 2, name: 'Dermatology', description: 'Consult a dermatologist for skin-related concerns.' }
+          {
+            id: 1,
+            name: "General Medicine",
+            description: "Consult a general physician for common ailments.",
+          },
+          {
+            id: 2,
+            name: "Dermatology",
+            description: "Consult a dermatologist for skin-related concerns.",
+          },
         ]);
       } finally {
         setLoading(false);
@@ -88,93 +101,152 @@ const UserHome = () => {
 
   return (
     <div>
-    <div className="container mt-5 animate-fade">
-      <div className="text-center mb-5">
-        <h1 className="display-4 text-primary fw-bold">Welcome, {user?.name || 'User'} 👋</h1>
-        <p className="lead text-muted">Your personal healthcare hub - Book consultations, track appointments, and stay informed.</p>
-      </div>
+      <div className="container mt-5 animate-fade">
+        <div className="text-center mb-5">
+          <h1 className="display-4 text-primary fw-bold">
+            Welcome, {user?.name || "User"} 👋
+          </h1>
+          <p className="lead text-muted">
+            Your personal healthcare hub - Book consultations, track
+            appointments, and stay informed.
+          </p>
+        </div>
 
-      <div className="row gy-4 mb-5">
-        <div className="col-md-4">
-          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
-            <div className="card-body p-4 d-flex flex-column">
-              <img src="/images/consult-online.svg" alt="Online Consultation" className="mb-3 mx-auto" style={{ width: '60px' }} />
-              <h5 className="fw-bold">Consult Doctor</h5>
-              <p className="small text-muted">Consultations with top doctors at your convenience.</p>
-              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/consultation/doctor')}>Book Now</button>
+        <div className="row gy-4 mb-5">
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+              <div className="card-body p-4 d-flex flex-column">
+                <img
+                  src="https://cdn.pixabay.com/photo/2020/03/30/17/40/doctor-4983465_960_720.jpg"
+                  alt="Online Consultation"
+                  className="mb-3 mx-auto"
+                  style={{ width: "60px" }}
+                />
+                <h5 className="fw-bold">Consult Doctor</h5>
+                <p className="small text-muted">
+                  Consultations with top doctors at your convenience.
+                </p>
+                <button
+                  className="btn btn-outline-primary mt-auto"
+                  onClick={() => navigate("/consultation/doctor")}
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+              <div className="card-body p-4 d-flex flex-column">
+                <img
+                  src="/images/hospital.svg"
+                  alt="Hospital Consultation"
+                  className="mb-3 mx-auto"
+                  style={{ width: "60px" }}
+                />
+                <h5 className="fw-bold">Consult Hospital</h5>
+                <p className="small text-muted">
+                  Consults hospitals checkups and diagnostics.
+                </p>
+                <button
+                  className="btn btn-outline-primary mt-auto"
+                  onClick={() => navigate("/consultation/hospital")}
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+              <div className="card-body p-4 d-flex flex-column">
+                <img
+                  src="/images/medical-records.svg"
+                  alt="Medical Consultation Records"
+                  className="mb-3 mx-auto"
+                  style={{ width: "60px" }}
+                />
+                <h5 className="fw-bold">Medical Records</h5>
+                <p className="small text-muted">
+                  Securely view and manage your medical history.
+                </p>
+                <button
+                  className="btn btn-outline-primary mt-auto"
+                  onClick={() => navigate("/user-profile")}
+                >
+                  View Records
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="col-md-4">
-          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
-            <div className="card-body p-4 d-flex flex-column">
-              <img src="/images/hospital.svg" alt="Hospital Consultation" className="mb-3 mx-auto" style={{ width: '60px' }} />
-              <h5 className="fw-bold">Consult Hospital</h5>
-              <p className="small text-muted">Consults hospitals checkups and diagnostics.</p>
-              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/consultation/hospital')}>Book Now</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
-            <div className="card-body p-4 d-flex flex-column">
-              <img src="/images/medical-records.svg" alt="Medical Consultation Records" className="mb-3 mx-auto" style={{ width: '60px' }} /> 
-              <h5 className="fw-bold">Medical Records</h5>
-              <p className="small text-muted">Securely view and manage your medical history.</p>
-              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/user-profile')}>View Records</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <section className="mb-5">
-        <h3 className="text-primary mb-4 text-center">Recent Appointments</h3>
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped table-hover">
-            <thead className="table-primary">
-              <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Doctor</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments.length > 0 ? appointments.map((appt, idx) => (
-                <tr key={idx}>
-                  <td>{new Date(appt.date).toLocaleDateString()}</td>
-                  <td>{appt.type}</td>
-                  <td>{appt.doctor}</td>
-                  <td><span className={`badge bg-${appt.status === 'confirmed' ? 'success' : 'warning'}`}>{appt.status}</span></td>
+        <section className="mb-5">
+          <h3 className="text-primary mb-4 text-center">Recent Appointments</h3>
+          <div className="table-responsive">
+            <table className="table table-bordered table-striped table-hover">
+              <thead className="table-primary">
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Doctor</th>
+                  <th>Status</th>
                 </tr>
-              )) : (
-                <tr><td colSpan="4" className="text-muted text-center">No appointments found</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </thead>
+              <tbody>
+                {appointments.length > 0 ? (
+                  appointments.map((appt, idx) => (
+                    <tr key={idx}>
+                      <td>{new Date(appt.date).toLocaleDateString()}</td>
+                      <td>{appt.type}</td>
+                      <td>{appt.doctor}</td>
+                      <td>
+                        <span
+                          className={`badge bg-${
+                            appt.status === "confirmed" ? "success" : "warning"
+                          }`}
+                        >
+                          {appt.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-muted text-center">
+                      No appointments found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <section className="mb-5 p-4 bg-white shadow rounded">
-        <h3 className="text-success mb-4 text-center">Health Tips</h3>
-        <div className="row">
-          <div className="col-md-4">
-            <div className="alert alert-info">💧 Drink plenty of water daily to stay hydrated.</div>
+        <section className="mb-5 p-4 bg-white shadow rounded">
+          <h3 className="text-success mb-4 text-center">Health Tips</h3>
+          <div className="row">
+            <div className="col-md-4">
+              <div className="alert alert-info">
+                💧 Drink plenty of water daily to stay hydrated.
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="alert alert-warning">
+                🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="alert alert-success">
+                🛌 Ensure 7-8 hours of sleep for better recovery and focus.
+              </div>
+            </div>
           </div>
-          <div className="col-md-4">
-            <div className="alert alert-warning">🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.</div>
-          </div>
-          <div className="col-md-4">
-            <div className="alert alert-success">🛌 Ensure 7-8 hours of sleep for better recovery and focus.</div>
-          </div>
-        </div>
-      </section>
-
-    </div>
-      <Footer/>
+        </section>
       </div>
+    </div>
   );
 };
 
