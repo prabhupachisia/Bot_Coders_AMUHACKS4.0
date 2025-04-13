@@ -11,7 +11,7 @@ import UserHome from './Pages/User/UserHome/UserHome';
 import DoctorHome from './Pages/Doctor/DocHome';        // Add this file
 import HospitalHome from './Pages/Hospital/HosHome';  // Add this file
 import DocProfile from './Pages/Doctor/DocProfile';
-import DocTreat from './Pages/Doctor/DocTreat';      // Add this file
+import DocView from './Pages/Doctor/DocView';      // Add this file
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
           <Route path="/hos-home" element={<HospitalHome />} />
           <Route path="/careers/doctor-reg" element={<DocRegister />} />
           <Route path="/careers/hospitals-reg" element={<HosRegister />} />
-          <Route path="/doctor/treat/:consultId" element={<DocTreat />} />
+          <Route path="/doctor/treat/:consultId" element={<DocView />} />
         </Routes>
       </div>
     </Router>

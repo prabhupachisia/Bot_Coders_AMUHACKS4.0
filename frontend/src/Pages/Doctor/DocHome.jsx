@@ -112,13 +112,13 @@ const DocHome = () => {
                   <div className="mt-auto d-flex gap-2">
                     <button
                       className="btn btn-outline-primary w-50 d-flex align-items-center justify-content-center"
-                      onClick={() => handleViewDetails(patient)}
+                      onClick={() =>handleTreatPatient(patient.id) }
                     >
                       <MdOutlineVisibility className="me-1" /> View
                     </button>
                     <button
                       className="btn btn-success w-50"
-                      onClick={() => handleTreatPatient(patient.id)}
+                      onClick={() => handleViewDetails(patient)}
                     >
                       Treat
                     </button>
