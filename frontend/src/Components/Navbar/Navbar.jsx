@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaSearch, FaHeartbeat } from 'react-icons/fa';
+import { FaUserCircle, FaHeartbeat } from 'react-icons/fa';
 
 const Navbar = () => {
   const [user, setUser] = useState(null); // Track logged-in user state
@@ -83,24 +83,26 @@ const Navbar = () => {
               </button>
             </li>
 
-            <li className="nav-item dropdown">
-              <button
-                className="nav-link dropdown-toggle btn btn-link"
-                id="consultationsDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-                style={{ color: '#333', textDecoration: 'none' }}
-              >
-                Consultations
-              </button>
-              <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
-                <li><Link className="dropdown-item" to="/user-home">New Consultation</Link></li>
-                <li><Link className="dropdown-item" to="/user-home">History</Link></li>
-              </ul>
-            </li>
+            {user && role === 'patient' && (
+              <li className="nav-item dropdown">
+                <button
+                  className="nav-link dropdown-toggle btn btn-link"
+                  id="consultationsDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{ color: '#333', textDecoration: 'none' }}
+                >
+                  Consultations
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
+                  <li><Link className="dropdown-item" to="/user-home">New Consultation</Link></li>
+                  <li><Link className="dropdown-item" to="/user-home">History</Link></li>
+                </ul>
+              </li>
+            )}
 
             <li className="nav-item">
-              <Link className="nav-link" to="/services" style={{ color: '#333' }}>Services</Link>
+              <Link className="nav-link" to="/services" style={{ color: '#333' }}>About Us</Link>
             </li>
 
             <li className="nav-item">
@@ -126,11 +128,6 @@ const Navbar = () => {
             )}
           </ul>
 
-          <form className="d-flex me-3" role="search">
-            <input className="form-control me-2" type="search" placeholder="Search doctors..." aria-label="Search" />
-            <button className="btn btn-outline-primary" type="submit"><FaSearch /></button>
-          </form>
-
           {!user ? (
             <div className="d-flex gap-2 me-3">
               <Link to="/login" className="btn btn-outline-success">Login</Link>
@@ -149,8 +146,8 @@ const Navbar = () => {
                 {user.username || 'Profile'}
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><button className="dropdown-item" onClick={handleDashboardClick}>Dashboard</button></li>
-                <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
+                <li><button className="dropdown-item" onClick={handleDashboardClick}>Profile</button></li>
+                
                 <li><hr className="dropdown-divider" /></li>
                 <li><Link className="dropdown-item" to="/" onClick={handleLogout}>Logout</Link></li>
               </ul>
