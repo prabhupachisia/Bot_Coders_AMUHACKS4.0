@@ -34,9 +34,9 @@ const Navbar = () => {
   const handleHomeClick = () => {
     if (user && role) {
       if (role === 'doctor') {
-        navigate('/doctor-home');
+        navigate('/doc-home');
       } else if (role === 'hospital') {
-        navigate('/hospital-home');
+        navigate('/hos-home');
       } else {
         navigate('/user-home');
       }

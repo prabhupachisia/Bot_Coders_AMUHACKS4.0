@@ -10,6 +10,8 @@ import UserProfile from './Pages/User/UserProfile/UserProfile';
 import UserHome from './Pages/User/UserHome/UserHome';
 import DoctorHome from './Pages/Doctor/DocHome';        // Add this file
 import HospitalHome from './Pages/Hospital/HosHome';  // Add this file
+import DocHome from './Pages/Doctor/DocHome';
+import DocProfile from './Pages/Doctor/DocProfile';
 
 function App() {
   return (
@@ -22,8 +24,9 @@ function App() {
           <Route path="/register" element={<UserRegister />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/user-home" element={<UserHome />} />
-          <Route path="/doctor-home" element={<DoctorHome />} />
-          <Route path="/hospital-home" element={<HospitalHome />} />
+          <Route path="/doc-home" element={<DoctorHome />} />
+          <Route path="/doctor-profile" element={<DocProfile />} />
+          <Route path="/hos-home" element={<HospitalHome />} />
           <Route path="/careers/doctor-reg" element={<DocRegister />} />
           <Route path="/careers/hospitals-reg" element={<HosRegister />} />
         </Routes>
