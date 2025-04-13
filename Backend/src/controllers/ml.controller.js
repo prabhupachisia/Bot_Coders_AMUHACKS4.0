@@ -1,52 +1,72 @@
-// controllers/mlUploadController.js
 const axios = require('axios');
 const { cloudinary } = require('../config/cloudinary');
-const MLModel = require('../models/ml.model');
+const { ML } = require('../models');
 
 const uploadMLPhotos = async (req, res) => {
     try {
-        // 1. Upload images to Cloudinary
+        // Step 1: Validate inputs
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ success: false, message: 'No files uploaded' });
+        }
+
+        if (!req.body.consultId) {
+            return res.status(400).json({ success: false, message: 'Consult ID is required' });
+        }
+
+        // Step 2: Upload files to Cloudinary
         const uploadPromises = req.files.map(file =>
             cloudinary.uploader.upload(file.path, { folder: 'ml-uploads' })
         );
-        const cloudinaryResults = await Promise.all(uploadPromises);
-        const photoUrls = cloudinaryResults.map(r => r.secure_url);
+        const uploadedImages = await Promise.all(uploadPromises);
+        const photoUrls = uploadedImages.map(img => img.secure_url);
 
-        // 2. Save to MongoDB
-        const mlEntry = await MLModel.create({
+        // Step 3: Save to MongoDB
+        const mlEntry = await ML.create({
             consult: req.body.consultId,
             photos: photoUrls
         });
 
-        // 3. Call Flask ML Server for each image individually
-        const mlRequests = photoUrls.map(url =>
-            axios.post('http://localhost:8080/predict', {
-                image_url: url  // Note singular 'image_url' to match Flask endpoint
-            })
-        );
+        // Step 4: Send image URLs to Flask server (port 8080) for predictions
+        const predictionRequests = photoUrls.map(async (url) => {
+            try {
+                const response = await axios.post('http://127.0.0.1:8080/predict', {
+                    image_url: url
+                }, {
+                    timeout: 60000 // 10 seconds timeout to handle Flask server delay
+                });
 
-        // Handle responses with allSettled to process partial successes
-        const mlResponses = await Promise.allSettled(mlRequests);
+                return {
+                    image_url: url,
+                    success: true,
+                    prediction: response.data
+                };
+            } catch (error) {
+                console.error(`Prediction failed for ${url}:`, error.message);
 
-        // Process results
-        const results = mlResponses.map((response, index) => ({
-            image_url: photoUrls[index],
-            status: response.status,
-            data: response.status === 'fulfilled' ? response.value.data : response.reason.response?.data || 'Request failed'
-        }));
+                return {
+                    image_url: url,
+                    success: false,
+                    error: error.response?.data || error.message
+                };
+            }
+        });
 
+        const mlResults = await Promise.all(predictionRequests);
+
+        // Step 5: Respond with results
         res.status(201).json({
             success: true,
             cloudinaryUrls: photoUrls,
-            mlResults: results,
+            mlResults,
             databaseEntry: mlEntry
         });
 
     } catch (error) {
+        console.error('Upload ML Photo Error:', error.message);
         res.status(500).json({
             success: false,
-            error: `Processing Error: ${error.message}`,
-            details: error.response?.data || 'Check server logs for details'
+            message: 'Something went wrong while processing ML upload',
+            error: error.message
         });
     }
 };

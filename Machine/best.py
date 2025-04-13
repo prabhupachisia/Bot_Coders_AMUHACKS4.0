@@ -6,8 +6,13 @@ from tensorflow.keras.preprocessing import image
 import requests
 from io import BytesIO
 from PIL import Image
+from flask_cors import CORS  # Import CORS
+
 # Flask app
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Load model
 model = tf.keras.models.load_model('C:\\Coding Learning\\Projects\\Bot_Coders_AMUHACKS4.0\\Machine\\my_model.h5')
@@ -20,6 +25,10 @@ class_indices = {
     'normal': 3,
 }
 labels = {v: k for k, v in class_indices.items()}
+@app.route('/test', methods=['GET'])
+def test():
+    return jsonify({"status": "Flask is running"})
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -45,7 +54,7 @@ def predict():
         prediction = model.predict(img_array)
         predicted_index = np.argmax(prediction, axis=1)[0]
         predicted_label = labels[predicted_index]
-        print("Meow")
+
         return jsonify({
             'prediction': predicted_label,
             'confidence': float(np.max(prediction))
@@ -53,6 +62,5 @@ def predict():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 if __name__ == '__main__':
-    app.run(debug=True, port=880)
+    app.run(debug=True, host='127.0.0.1', port=8080)
