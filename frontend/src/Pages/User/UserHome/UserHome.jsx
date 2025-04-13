@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Footer from "../../../Components/Footer/Footer";
 
 const UserHome = () => {
   const navigate = useNavigate();
@@ -59,6 +58,7 @@ const UserHome = () => {
       } catch (err) {
         console.error(err);
         setError("Unable to connect to the server. Showing demo data.");
+        console.log(error);
 
         setUser({ name: "Demo User" });
         setAppointments([
@@ -81,7 +81,7 @@ const UserHome = () => {
     };
 
     fetchData();
-  }, [navigate]);
+  }, [error, navigate]);
 
   if (loading) {
     return (
@@ -92,7 +92,7 @@ const UserHome = () => {
   }
 
   return (
-    <div>
+  
       <div className="container mt-5 animate-fade">
         <div className="text-center mb-5">
           <h1 className="display-4 text-primary fw-bold">
@@ -108,12 +108,12 @@ const UserHome = () => {
           <div className="col-md-4">
             <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
               <div className="card-body p-4 d-flex flex-column">
-                <img
-                  src="https://cdn.pixabay.com/photo/2020/03/30/17/40/doctor-4983465_960_720.jpg"
-                  alt="Online Consultation"
-                  className="mb-3 mx-auto"
-                  style={{ width: "60px" }}
-                />
+              <img
+  src="/doc1.jpg"
+  alt="Online Consultation"
+  className="mb-4 mx-auto"
+  style={{ width: "100px", height: "auto" }}
+/>
                 <h5 className="fw-bold">Consult Doctor</h5>
                 <p className="small text-muted">
                   Consultations with top doctors at your convenience.
@@ -132,10 +132,10 @@ const UserHome = () => {
             <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
               <div className="card-body p-4 d-flex flex-column">
                 <img
-                  src="/images/hospital.svg"
+                  src="/hospital2.jpg"
                   alt="Hospital Consultation"
                   className="mb-3 mx-auto"
-                  style={{ width: "60px" }}
+                  style={{ width: "100px", height: "auto" }}
                 />
                 <h5 className="fw-bold">Consult Hospital</h5>
                 <p className="small text-muted">
@@ -155,10 +155,10 @@ const UserHome = () => {
             <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
               <div className="card-body p-4 d-flex flex-column">
                 <img
-                  src="/images/medical-records.svg"
+                  src="/medicalrecords3.jpg"
                   alt="Medical Consultation Records"
                   className="mb-3 mx-auto"
-                  style={{ width: "60px" }}
+                  style={{ width: "150px", height: "100px" }}
                 />
                 <h5 className="fw-bold">Medical Records</h5>
                 <p className="small text-muted">
@@ -249,9 +249,7 @@ const UserHome = () => {
         </section>
       </div>
 
-      {/* Footer */}
-      <Footer />
-    </div>
+    
   );
 };
 

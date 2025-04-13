@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Alert,
+  Spinner,
+  Badge
+} from "react-bootstrap";
+import { FaTimesCircle, FaCheckCircle } from "react-icons/fa";
+
+const placeholderImage = "https://via.placeholder.com/150?text=No+Image";
 
 const UserMedicRec = () => {
   const [consultations, setConsultations] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // Fetch consultations on component mount
   useEffect(() => {
     const fetchConsultations = async () => {
       try {
         const token = localStorage.getItem("accessToken");
         if (!token) {
           setError("No authentication token found");
+          setLoading(false);
           return;
         }
 
@@ -27,13 +41,14 @@ const UserMedicRec = () => {
         setConsultations(data);
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchConsultations();
   }, []);
 
-  // Handle consultation cancellation
   const handleCancelConsult = async (consultId) => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -45,18 +60,17 @@ const UserMedicRec = () => {
       const response = await fetch(
         `http://localhost:5000/v1/consult/${consultId}`,
         {
-          method: "PATCH",
+          method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ status: "complete" }),
+          body: JSON.stringify({ status: "cancelled" }),
         }
       );
 
       if (!response.ok) throw new Error("Cancellation failed");
 
-      // Update local state
       setConsultations((prev) =>
         prev.filter((consult) => consult.id !== consultId)
       );
@@ -65,68 +79,107 @@ const UserMedicRec = () => {
     }
   };
 
-  if (error) return <div className="error">{error}</div>;
-  if (!consultations.length) return <div>No medical records found</div>;
+  if (loading) {
+    return (
+      <Container className="text-center py-5" style={{ backgroundColor: "#f4f8fb", minHeight: "100vh" }}>
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">Loading medical records...</p>
+      </Container>
+    );
+  }
 
   return (
-    <div className="consultation-list">
-      {consultations.map((consult) => (
-        <div key={consult.id} className="consultation-card">
-          <div className="consultation-header">
-            <h3>Consultation #{consult.id.slice(-6)}</h3>
-            <span className={`status ${consult.status}`}>{consult.status}</span>
-          </div>
+    <Container className="py-5" style={{ backgroundColor: "#f4f8fb", minHeight: "100vh" }}>
+      <h2 className="text-center mb-5 text-primary fw-bold">Your Medical Records</h2>
 
-          <div className="consultation-details">
-            <div className="section">
-              <h4>Description</h4>
-              <p>{consult.description}</p>
-            </div>
+      {error && <Alert variant="danger">{error}</Alert>}
 
-            <div className="section">
-              <h4>Photos</h4>
-              <div className="photo-grid">
-                {consult.photos.map((photo, index) => (
-                  <img
-                    key={index}
-                    src={photo}
-                    alt={`Consultation ${index + 1}`}
-                    className="photo-thumbnail"
-                  />
-                ))}
-              </div>
-            </div>
+      {consultations.length === 0 ? (
+        <p className="text-center text-muted">No medical records found</p>
+      ) : (
+        <Row className="g-4">
+          {consultations.map((consult) => (
+            <Col md={6} lg={4} key={consult.id}>
+              <Card className="shadow-sm border-0 h-100 d-flex flex-column justify-content-between">
+                <Card.Header className="bg-white d-flex justify-content-between align-items-center">
+                  <span className="fw-semibold text-primary">
+                    Consultation #{consult.id.slice(-6)}
+                  </span>
+                  <Badge bg={
+                    consult.status === "complete" ? "success" :
+                      consult.status === "cancelled" ? "secondary" : "warning"
+                  }>
+                    {consult.status}
+                  </Badge>
+                </Card.Header>
 
-            <div className="doctor-patient-info">
-              <div className="doctor-info">
-                <h4>Doctor Details</h4>
-                <p>Name: {consult.doctor.details.name}</p>
-                <p>Specialization: {consult.doctor.specialization}</p>
-              </div>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Text className="mb-3">
+                    <strong>Description:</strong> <br />
+                    {consult.description}
+                  </Card.Text>
 
-              <div className="patient-info">
-                <h4>Patient Details</h4>
-                <p>Name: {consult.patient.name}</p>
-                <p>
-                  Location: {consult.patient.city}, {consult.patient.state}
-                </p>
-              </div>
-            </div>
+                  <div className="mb-3">
+                    <strong>Photos:</strong>
+                    <Row className="mt-2 g-2 justify-content-center">
+                      {(consult.photos && consult.photos.length > 0 ? consult.photos : [placeholderImage]).map(
+                        (photo, index) => (
+                          <Col xs={4} key={index} className="d-flex justify-content-center">
+                            <img
+                              src={photo}
+                              alt={`Consultation ${index + 1}`}
+                              className="img-fluid rounded border"
+                              style={{ height: "80px", objectFit: "cover" }}
+                              onError={(e) => (e.target.src = placeholderImage)}
+                            />
+                          </Col>
+                        )
+                      )}
+                    </Row>
+                  </div>
 
-            <div className="meta-info">
-              <p>Created: {new Date(consult.createdAt).toLocaleDateString()}</p>
-              <button
-                onClick={() => handleCancelConsult(consult.id)}
-                className="cancel-button"
-                disabled={consult.status === "complete"}
-              >
-                {consult.status === "complete" ? "Completed" : "Cancel Consult"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+                  <div className="mb-2">
+                    <strong>Doctor:</strong>
+                    <p className="mb-1">Name: {consult.doctor.details.name}</p>
+                    <p className="mb-1">Specialization: {consult.doctor.specialization}</p>
+                  </div>
+
+                  <div className="mb-2">
+                    <strong>Patient:</strong>
+                    <p className="mb-1">Name: {consult.patient.name}</p>
+                    <p className="mb-1">
+                      Location: {consult.patient.city}, {consult.patient.state}
+                    </p>
+                  </div>
+
+                  <small className="text-muted">
+                    Created on: {new Date(consult.createdAt).toLocaleDateString()}
+                  </small>
+
+                  <div className="mt-auto d-grid">
+                    <Button
+                      variant={consult.status === "complete" ? "outline-success" : "outline-danger"}
+                      disabled={consult.status === "complete"}
+                      onClick={() => handleCancelConsult(consult.id)}
+                    >
+                      {consult.status === "complete" ? (
+                        <>
+                          <FaCheckCircle className="me-2" /> Completed
+                        </>
+                      ) : (
+                        <>
+                          <FaTimesCircle className="me-2" /> Cancel Consult
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
+    </Container>
   );
 };
 

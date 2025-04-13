@@ -14,7 +14,6 @@ import DocProfile from './Pages/Doctor/DocProfile';
 import DocView from './Pages/Doctor/DocView';      // Add this file
 import DocTreat from './Pages/Doctor/DocTreat';
 import UserDocCon from './Pages/User/UserDocCon/UserDocCon';  // Add this file
-import Footer from './Components/Footer/Footer';
 import UserHosCon from './Pages/User/UserHosCon/UserHosCon';  // Add this file
 import HosPat from './Pages/Hospital/HosPat';
 import HosDocList from './Pages/HosDocList/HosDocList';
