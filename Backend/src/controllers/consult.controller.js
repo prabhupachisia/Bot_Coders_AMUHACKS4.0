@@ -71,7 +71,14 @@ const getAllConsults = catchAsync(async (req, res) => {
 
     // Fetch consultations based on the query
     const consults = await Consult.find(query)
-        .populate('doctor patient') // Populate doctor and patient details
+        .populate({
+            path: 'doctor',
+            populate: {
+                path: 'details', // Populate the details field in the Doctor model
+                select: 'name email', // Select specific fields from User model (e.g., name and email)
+            },
+        })
+        .populate('patient') // Populate patient details
         .sort('-createdAt'); // Sort by most recently created first
 
     res.status(httpStatus.OK).send(consults);

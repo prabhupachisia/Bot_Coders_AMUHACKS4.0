@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "../../../Components/Footer/Footer";
-// import './UserHome.css';
 
 const UserHome = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [appointments, setAppointments] = useState([]);
-  const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -43,15 +41,19 @@ const UserHome = () => {
           }
         );
 
-        setAppointments(
-          consultsRes.data.map((consult) => ({
-            date: consult.date,
-            type: consult.type,
-            doctor: consult.doctorName,
-            status: consult.status,
-          }))
+        // Process consultations from backend
+        const sortedConsults = [...consultsRes.data].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        setConsultations(consultsRes.data);
+
+        const recentAppointments = sortedConsults.slice(0, 5).map((consult) => ({
+          date: consult.createdAt,
+          type: consult.description, // Using description as type
+          doctor: consult.doctor.details.name, // Access nested doctor name
+          status: consult.status,
+        }));
+
+        setAppointments(recentAppointments);
       } catch (err) {
         console.error(err);
         setError("Unable to connect to the server. Showing demo data.");
@@ -69,18 +71,6 @@ const UserHome = () => {
             type: "Eye Checkup",
             doctor: "Dr. Watson",
             status: "pending",
-          },
-        ]);
-        setConsultations([
-          {
-            id: 1,
-            name: "General Medicine",
-            description: "Consult a general physician for common ailments.",
-          },
-          {
-            id: 2,
-            name: "Dermatology",
-            description: "Consult a dermatologist for skin-related concerns.",
           },
         ]);
       } finally {
@@ -147,7 +137,7 @@ const UserHome = () => {
                 />
                 <h5 className="fw-bold">Consult Hospital</h5>
                 <p className="small text-muted">
-                  Consults hospitals checkups and diagnostics.
+                  Consult hospitals for checkups and diagnostics.
                 </p>
                 <button
                   className="btn btn-outline-primary mt-auto"
@@ -205,7 +195,11 @@ const UserHome = () => {
                       <td>
                         <span
                           className={`badge bg-${
-                            appt.status === "confirmed" ? "success" : "warning"
+                            appt.status === "confirmed"
+                              ? "success"
+                              : appt.status === "completed"
+                              ? "secondary"
+                              : "warning"
                           }`}
                         >
                           {appt.status}
@@ -225,27 +219,26 @@ const UserHome = () => {
           </div>
         </section>
 
+        {/* Health Tips Section */}
         <section className="mb-5 p-4 bg-white shadow rounded">
           <h3 className="text-success mb-4 text-center">Health Tips</h3>
           <div className="row">
-            <div className="col-md-4">
-              <div className="alert alert-info">
-                💧 Drink plenty of water daily to stay hydrated.
+            {[
+              { tip: "💧 Drink plenty of water daily to stay hydrated.", color: "info" },
+              { tip: "🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.", color: "warning" },
+              { tip: "🛌 Ensure 7–8 hours of sleep for better recovery and focus.", color: "success" },
+            ].map((tipObj, idx) => (
+              <div key={idx} className={`col-md-4`}>
+                <div className={`alert alert-${tipObj.color}`}>{tipObj.tip}</div>
               </div>
-            </div>
-            <div className="col-md-4">
-              <div className="alert alert-warning">
-                🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="alert alert-success">
-                🛌 Ensure 7-8 hours of sleep for better recovery and focus.
-              </div>
-            </div>
+            ))}
           </div>
         </section>
+
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
