@@ -12,10 +12,15 @@ const prescriptionSchema = mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    consultation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Consultation',
+        required: true,
+    },
     description: {
         type: String,
         required: true,
-    },
-},{
+    }
+}, {
     timestamps: true,
 });

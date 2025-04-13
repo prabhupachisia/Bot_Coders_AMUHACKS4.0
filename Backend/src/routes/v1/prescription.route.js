@@ -1,24 +1,48 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
-const validate = require('../..//middlewares/validate');
-const { prescriptionController } = require('../../controllers');
-const {prescriptionValidation} = require('../../validations');
+const validate = require('../../middlewares/validate');
+const prescriptionController = require('../../controllers/prescription.controller');
+const prescriptionValidation = require('../../validations/prescription.validation');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-// Create a new prescription for a specific patient (only accessible by doctors)
-router.post('/:patientId', auth(), validate(prescriptionValidation.createPrescription), prescriptionController.createPrescription);
+// Create prescription for specific consultation
+router.post(
+    '/',
+    auth('doctor'),
+    validate(prescriptionValidation.createPrescription),
+    prescriptionController.createPrescription
+);
 
-// Get all prescriptions (accessible by both doctors and patients)
-router.get('/', auth(), prescriptionController.getAllPrescriptions);
+// Get all prescriptions for a consultation
+router.get(
+    '/',
+    auth(['doctor', 'patient']),
+    prescriptionController.getConsultationPrescriptions
+);
 
-// Get a specific prescription by ID (accessible by both doctors and patients)
-router.get('/:prescriptionId', auth(), validate(prescriptionValidation.prescriptionIdValidation), prescriptionController.getPrescriptionById);
+// Get specific prescription in consultation
+router.get(
+    '/:prescriptionId',
+    auth(['doctor', 'patient']),
+    validate(prescriptionValidation.prescriptionIdValidation),
+    prescriptionController.getPrescription
+);
 
-// Update a specific prescription by ID (only accessible by doctors)
-router.patch('/:prescriptionId', auth(), validate(prescriptionValidation.prescriptionIdValidation), validate(prescriptionValidation.updatePrescription), prescriptionController.updatePrescription);
+// Update prescription in consultation
+router.patch(
+    '/:prescriptionId',
+    auth('doctor'),
+    validate(prescriptionValidation.updatePrescription),
+    prescriptionController.updatePrescription
+);
 
-// Delete a specific prescription by ID (only accessible by doctors)
-router.delete('/:prescriptionId', auth(), validate(prescriptionValidation.prescriptionIdValidation), prescriptionController.deletePrescription);
+// Delete prescription in consultation
+router.delete(
+    '/:prescriptionId',
+    auth('doctor'),
+    validate(prescriptionValidation.prescriptionIdValidation),
+    prescriptionController.deletePrescription
+);
 
 module.exports = router;

@@ -1,33 +1,41 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
-// Validation for creating a new prescription
 const createPrescription = {
     body: Joi.object().keys({
         description: Joi.string().required(),
-    }),
-    params: Joi.object().keys({
-        patientId: Joi.string().required().length(24),
-    }),
+        medicines: Joi.array().items(
+            Joi.object({
+                name: Joi.string().required(),
+                dosage: Joi.string().required(),
+                duration: Joi.string().required()
+            })
+        )
+    })
 };
 
-// Validation for updating a prescription
 const updatePrescription = {
-    body: Joi.object()
-        .keys({
-            description: Joi.string(),
-        })
-        .min(1), // At least one field must be provided for update
+    body: Joi.object().keys({
+        description: Joi.string(),
+        medicines: Joi.array().items(
+            Joi.object({
+                name: Joi.string(),
+                dosage: Joi.string(),
+                duration: Joi.string()
+            })
+        )
+    }).min(1)
 };
 
-// Validation for getting or deleting prescriptions by ID
 const prescriptionIdValidation = {
     params: Joi.object().keys({
-        prescriptionId: Joi.string().required().length(24),
-    }),
+        prescriptionId: Joi.string().custom(objectId).required(),
+        consultationId: Joi.string().custom(objectId).required()
+    })
 };
 
 module.exports = {
     createPrescription,
     updatePrescription,
-    prescriptionIdValidation,
+    prescriptionIdValidation
 };
