@@ -20,6 +20,10 @@ import HosPat from './Pages/Hospital/HosPat';
 import HosDocList from './Pages/HosDocList/HosDocList';
 import HosPatView from './Pages/Hospital/HosPatView';
 import DocList from './Pages/Hospital/DocList';
+import ConsultationForm from "./Pages/User/UserDocCon/ConsultationForm"; 
+import ConForm from './Pages/User/UserHosCon/ConsForm';
+
+
 function App() {
   return (
     <Router>
@@ -44,6 +48,9 @@ function App() {
           <Route path="/hospital/patients" element={<HosPat />} />
           <Route path="/patient/:PatientId" element={<HosPatView />} />
           <Route path="/hospital/doctors" element={<DocList />} />
+          <Route path="/consultation/:doctorId" element={<ConsultationForm />} />
+          <Route path="/consult/:doctorId" element={<ConForm />} />
+
         </Routes>
       </div>
     </Router>

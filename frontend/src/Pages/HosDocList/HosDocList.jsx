@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, Spinner, Container, Row, Col } from "react-bootstrap";
 import {
   FaUserMd,
@@ -14,6 +14,7 @@ import "./HosDocList.css";
 
 const HosDocList = () => {
   const { id: hospitalId } = useParams();
+  const navigate = useNavigate(); // 👈 Add this line
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +31,6 @@ const HosDocList = () => {
 
         console.log("Fetched doctor data:", res.data);
 
-        // Ensure we're setting an array no matter what
         const fetchedDoctors = Array.isArray(res.data)
           ? res.data
           : Array.isArray(res.data.doctors)
@@ -78,8 +78,8 @@ const HosDocList = () => {
   }, [hospitalId]);
 
   const handleConsult = (doctorId) => {
-    console.log(`Consulting doctor with ID: ${doctorId}`);
-    alert("Consult request sent to doctor!");
+    console.log(`Redirecting to consult doctor with ID: ${doctorId}`);
+    navigate(`/consult/${doctorId}`); // 👈 Redirect to ConForm page
   };
 
   return (
@@ -135,7 +135,7 @@ const HosDocList = () => {
                       <Button
                         variant="outline-primary"
                         className="w-100 mt-3"
-                        onClick={() => handleConsult(doc.id)}
+                        onClick={() => handleConsult(doc.id)} // 👈 Navigate on click
                       >
                         Consult
                       </Button>

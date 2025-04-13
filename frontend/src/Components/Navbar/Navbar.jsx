@@ -18,6 +18,8 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     setUser(null);
     setRole(null);
     navigate('/');

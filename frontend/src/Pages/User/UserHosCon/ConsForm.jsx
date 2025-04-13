@@ -11,7 +11,7 @@ const dummyDoctors = {
   4: "Dr. Aisha Khan"
 };
 
-const ConsultationForm = () => {
+const ConForm = () => {
   const { doctorId } = useParams();
   const navigate = useNavigate();
 
@@ -160,4 +160,4 @@ const ConsultationForm = () => {
   );
 };
 
-export default ConsultationForm;
+export default ConForm;
