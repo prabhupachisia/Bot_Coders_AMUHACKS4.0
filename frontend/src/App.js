@@ -17,6 +17,7 @@ import UserDocCon from './Pages/User/UserDocCon/UserDocCon';  // Add this file
 import Footer from './Components/Footer/Footer';
 import UserHosCon from './Pages/User/UserHosCon/UserHosCon';  // Add this file
 import HosDocList from './Pages/HosDocList/HosDocList';
+import DocList from './Pages/Hospital/DocList';
 function App() {
   return (
     <Router>
@@ -38,7 +39,7 @@ function App() {
           <Route path="/consultation/doctor" element={<UserDocCon />} />
           <Route path="/consultation/hospital" element={<UserHosCon />} />
           <Route path="/hospital/:id/doctors" element={<HosDocList />} />
-
+          <Route path="/hospital/doctors" element={<DocList />} />
         </Routes>
       </div>
     </Router>
