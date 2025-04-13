@@ -10,14 +10,14 @@ const mongoose = require('mongoose');
  * Get all doctors related to a specific hospital
  */
 const getDoctorsByHospital = catchAsync(async (req, res) => {
-    const { hospitalId } = req.params;
+    const { id } = req.params;
 
-    // Validate hospitalId format
-    if (!isValidObjectId(hospitalId)) {
+    // Validate id format
+    if (!isValidObjectId(id)) {
         return res.status(400).send({ message: 'Invalid hospital ID' });
     }
     // Convert to ObjectId
-    const hospitalObjectId = new mongoose.Types.ObjectId(hospitalId);
+    const hospitalObjectId = new mongoose.Types.ObjectId(id);
 
     // Query doctors
     const doctors = await Doctor.find({ hospital: hospitalObjectId })
@@ -45,10 +45,10 @@ const getAllHospitals = catchAsync(async (req, res) => {
  * Get all patients related to a specific hospital
  */
 const getPatientsByHospital = catchAsync(async (req, res) => {
-    const { hospitalId } = req.params; // Extract hospital ID from request parameters
+    const { id } = req.params; // Extract hospital ID from request parameters
 
     // Find all doctors associated with the hospital
-    const doctors = await Doctor.find({ hospital: hospitalId }).select('_id');
+    const doctors = await Doctor.find({ hospital: id }).select('_id');
 
     if (!doctors || doctors.length === 0) {
         return res.status(httpStatus.NOT_FOUND).send({ message: 'No doctors found for this hospital' });
