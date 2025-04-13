@@ -13,7 +13,7 @@ const router = express.Router();
 // Create a new consultation for a doctor
 router.post(
     '/:doctorId',
-    auth(),
+    auth('patient'),
     upload.array('photos', 5), // handles files
     validate(consultValidation.createConsult),
     consultController.createConsult

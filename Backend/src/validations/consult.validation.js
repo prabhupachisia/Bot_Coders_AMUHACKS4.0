@@ -7,8 +7,6 @@ const createConsult = {
     }),
     body: Joi.object().keys({
         description: Joi.string().required(),
-        date: Joi.date().required(),
-        time: Joi.string().required(),
         status: Joi.string().valid('pending', 'completed', 'cancelled').default('pending'),
     }),
 };
