@@ -56,9 +56,9 @@ const AvailableHospitals = () => {
   }, []);
 
   const handleRegister = (hospitalId) => {
-    navigate(`/consultation/register/${hospitalId}`);
+    navigate(`/hospital/${hospitalId}/doctors`);
   };
-
+  
   return (
     <div className="container mt-5">
       <h1 className="text-center text-primary fw-bold mb-4">
