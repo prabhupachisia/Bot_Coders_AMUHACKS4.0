@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, Button, Spinner, Container, Row, Col } from "react-bootstrap";
+import { Card, Button, Spinner, Container, Row, Col, Alert } from "react-bootstrap";
 import {
     FaUserMd,
     FaGraduationCap,
@@ -12,7 +12,7 @@ import {
     FaTrashAlt,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import "../HosDocList/HosDocList.css";
+import "../Hospital/DocList";
 
 const DocList = () => {
     const [doctors, setDoctors] = useState([]);
@@ -88,11 +88,11 @@ const DocList = () => {
     }, []);
 
     const handleAddDoctor = () => {
-        navigate("/doctor/register"); // Adjust path if necessary
+        navigate("/doctor/register");
     };
 
-    const handleDeleteDoctor = () => {
-        alert("Feature coming soon: Delete doctor functionality!");
+    const handleDeleteDoctor = (id) => {
+        alert(`Feature coming soon: Delete doctor with ID ${id}`);
     };
 
     if (loading) {
@@ -109,72 +109,54 @@ const DocList = () => {
     return (
         <div className="hospital-doc-bg py-5">
             <Container>
-                <h2 className="text-center mb-5 text-primary fw-bold">
-                    Our Hospital Doctors
-                </h2>
-
-                {/* Flashcard-style action buttons */}
-                <Row className="mb-4 justify-content-center">
-                    <Col md={6}>
-                        <Card className="shadow-lg text-center glass-card p-4">
-                            <Card.Body>
-                                <h5 className="mb-4 text-primary fw-bold">
-                                    Doctor Management
-                                </h5>
-                                <div className="d-flex justify-content-around">
-                                    <Button variant="success" onClick={handleAddDoctor}>
-                                        <FaPlusCircle className="me-2" />
-                                        Add Doctor
-                                    </Button>
-                                    <Button variant="danger" onClick={handleDeleteDoctor}>
-                                        <FaTrashAlt className="me-2" />
-                                        Delete Doctor
-                                    </Button>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="text-primary fw-bold">Our Hospital Doctors</h2>
+                    <Button variant="outline-primary" onClick={handleAddDoctor}>
+                        <FaPlusCircle className="me-2" />
+                        Add Doctor
+                    </Button>
+                </div>
 
                 {doctors.length === 0 ? (
-                    <p className="text-center text-muted">
-                        No doctors found in this hospital
-                    </p>
+                    <Alert variant="warning" className="text-center">
+                        No doctors found in this hospital.
+                    </Alert>
                 ) : (
-                    <Row className="g-4 justify-content-center">
+                    <Row className="g-4">
                         {doctors.map((doctor) => (
                             <Col md={6} lg={4} key={doctor.id}>
-                                <Card className="doctor-card shadow-lg glass-card text-dark">
+                                <Card className="shadow-lg border-0 h-100 doctor-card-style">
+                                    <div className="position-relative">
+                                        <div className="bg-primary text-white text-center py-3">
+                                            <FaUserMd size={40} />
+                                            <h5 className="mt-2">Dr. {doctor.details.name}</h5>
+                                        </div>
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            className="position-absolute top-0 end-0 m-2 rounded-circle"
+                                            onClick={() => handleDeleteDoctor(doctor.id)}
+                                        >
+                                            <FaTrashAlt />
+                                        </Button>
+                                    </div>
                                     <Card.Body>
-                                        <Card.Title className="mb-3">
-                                            <FaUserMd className="me-2 text-primary" />
-                                            Dr. {doctor.details.name}
-                                        </Card.Title>
-
                                         <Card.Text>
                                             <FaStethoscope className="me-2 text-muted" />
-                                            <strong>Specialization:</strong>{" "}
-                                            {doctor.specialization}
+                                            <strong>Specialization:</strong> {doctor.specialization}
                                         </Card.Text>
-
                                         <Card.Text>
                                             <FaGraduationCap className="me-2 text-muted" />
-                                            <strong>Education:</strong>{" "}
-                                            {doctor.education}
+                                            <strong>Education:</strong> {doctor.education}
                                         </Card.Text>
-
                                         <Card.Text>
                                             <FaClock className="me-2 text-muted" />
-                                            <strong>Experience:</strong>{" "}
-                                            {doctor.experience} years
+                                            <strong>Experience:</strong> {doctor.experience} years
                                         </Card.Text>
-
                                         <Card.Text>
                                             <FaPhone className="me-2 text-muted" />
-                                            <strong>Phone:</strong>{" "}
-                                            {doctor.details.phone}
+                                            <strong>Phone:</strong> {doctor.details.phone}
                                         </Card.Text>
-
                                         <Card.Text>
                                             <FaMapMarkerAlt className="me-2 text-muted" />
                                             <strong>Location:</strong>{" "}
