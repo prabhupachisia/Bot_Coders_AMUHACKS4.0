@@ -4,6 +4,14 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./UserHosCon.css";
 
+const capitalizeWords = (str) =>                                        //used to capitalize the values to display
+    str
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  
+
 const AvailableHospitals = () => {
   const navigate = useNavigate();
   const [hospitals, setHospitals] = useState([]);
@@ -14,7 +22,7 @@ const AvailableHospitals = () => {
     const fetchHospitals = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/v1/hospitals", {
+        const response = await axios.get("http://localhost:5000/v1/hospital", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,11 +82,11 @@ const AvailableHospitals = () => {
                   {hospital.name}
                 </h5>
                 <p className="mb-1">
-                  <strong>Location:</strong> {hospital.location}
+                    <strong>Location:  </strong> 
+                        {capitalizeWords(hospital.city)}, {capitalizeWords(hospital.state)},  {capitalizeWords(hospital.country)}
+                     
                 </p>
-                <p className="mb-3 text-muted">
-                  <strong>Specializations:</strong> {hospital.specialization}
-                </p>
+                <p></p>
                 <button
                   className="btn btn-success mt-auto w-100 rounded-pill"
                   onClick={() => handleRegister(hospital.id)}
