@@ -1,11 +1,9 @@
-
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './UserHome.css';
+import Footer from '../../../Components/Footer/Footer';
+// import './UserHome.css';
 
 const UserHome = () => {
   const navigate = useNavigate();
@@ -88,112 +86,96 @@ const UserHome = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="alert alert-danger text-center mt-5">
-        {error}
-      </div>
-    );
-  }
-
   return (
+    <div>
     <div className="container mt-5 animate-fade">
-      {/* Welcome Header */}
       <div className="text-center mb-5">
-        <h1 className="display-4 text-primary fw-bold">Welcome Back, {user?.name || 'User'}!</h1>
-        <p className="lead text-muted">Your health is our priority. Manage your consultations and appointments seamlessly.</p>
+        <h1 className="display-4 text-primary fw-bold">Welcome, {user?.name || 'User'} 👋</h1>
+        <p className="lead text-muted">Your personal healthcare hub - Book consultations, track appointments, and stay informed.</p>
       </div>
 
-      {/* Consultation Options */}
+      <div className="row gy-4 mb-5">
+        <div className="col-md-4">
+          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+            <div className="card-body p-4 d-flex flex-column">
+              <img src="/images/consult-online.svg" alt="Online Consultation" className="mb-3 mx-auto" style={{ width: '60px' }} />
+              <h5 className="fw-bold">Consult Doctor</h5>
+              <p className="small text-muted">Consultations with top doctors at your convenience.</p>
+              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/consultation/doctor')}>Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+            <div className="card-body p-4 d-flex flex-column">
+              <img src="/images/hospital.svg" alt="Hospital Consultation" className="mb-3 mx-auto" style={{ width: '60px' }} />
+              <h5 className="fw-bold">Consult Hospital</h5>
+              <p className="small text-muted">Consults hospitals checkups and diagnostics.</p>
+              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/consultation/hospital')}>Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card shadow-sm border-0 h-100 text-center bg-light hover-card rounded-4">
+            <div className="card-body p-4 d-flex flex-column">
+              <img src="/images/medical-records.svg" alt="Medical Consultation Records" className="mb-3 mx-auto" style={{ width: '60px' }} /> 
+              <h5 className="fw-bold">Medical Records</h5>
+              <p className="small text-muted">Securely view and manage your medical history.</p>
+              <button className="btn btn-outline-primary mt-auto" onClick={() => navigate('/user-profile')}>View Records</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <section className="mb-5">
-        <h2 className="text-center text-primary mb-4">Consultation Options</h2>
-        <div className="row gy-4 justify-content-center">
-          {/* Hospital Card */}
-          <div className="col-md-5">
-            <div className="card shadow-sm border-0 text-center hover-card h-100 bg-light rounded-4 transition">
-              <div className="card-body d-flex flex-column px-4 py-5">
-                <img src="/images/hospital.svg" alt="Hospital Consultation" className="mb-3 mx-auto" style={{ width: '70px' }} />
-                <h5 className="card-title fw-semibold">Hospital Consultation</h5>
-                <p className="text-muted small">Connect with hospitals for specialized treatments and multi-department services.</p>
-                <button className="btn btn-outline-primary mt-auto w-100" onClick={() => navigate('/consultation/hospital')}>
-                  Choose Hospital
-                </button>
-              </div>
-            </div>
-          </div>
+        <h3 className="text-primary mb-4 text-center">Recent Appointments</h3>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped table-hover">
+            <thead className="table-primary">
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Doctor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.length > 0 ? appointments.map((appt, idx) => (
+                <tr key={idx}>
+                  <td>{new Date(appt.date).toLocaleDateString()}</td>
+                  <td>{appt.type}</td>
+                  <td>{appt.doctor}</td>
+                  <td><span className={`badge bg-${appt.status === 'confirmed' ? 'success' : 'warning'}`}>{appt.status}</span></td>
+                </tr>
+              )) : (
+                <tr><td colSpan="4" className="text-muted text-center">No appointments found</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-          {/* Doctor Carbtn btn-success btn-block mt-auto rounded-pilld */}
-          <div className="col-md-5">
-            <div className="card shadow-sm border-0 text-center hover-card h-100 bg-light rounded-4 transition">
-              <div className="card-body d-flex flex-column px-4 py-5">
-                <img src="/images/doctor.svg" alt="Doctor Consultation" className="mb-3 mx-auto" style={{ width: '70px' }} />
-                <h5 className="card-title fw-semibold">Doctor Consultation</h5>
-                <p className="text-muted small">Directly consult with experienced doctors across multiple specialties.</p>
-                <button className="btn btn-outline-primary mt-auto w-100" onClick={() => navigate('/consultation/doctor')}>
-                  Choose Doctor
-                </button>
-              </div>
-            </div>
+      <section className="mb-5 p-4 bg-white shadow rounded">
+        <h3 className="text-success mb-4 text-center">Health Tips</h3>
+        <div className="row">
+          <div className="col-md-4">
+            <div className="alert alert-info">💧 Drink plenty of water daily to stay hydrated.</div>
+          </div>
+          <div className="col-md-4">
+            <div className="alert alert-warning">🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.</div>
+          </div>
+          <div className="col-md-4">
+            <div className="alert alert-success">🛌 Ensure 7-8 hours of sleep for better recovery and focus.</div>
           </div>
         </div>
       </section>
 
-      {/* Dashboard Section */}
-      <section className="mt-5">
-        <h2 className="text-center text-primary mb-4">Your Dashboard</h2>
-        <div className="row gy-4 justify-content-center">
-          {/* Profile Card */}
-          <div className="col-md-5">
-            <div className="card shadow-sm border-0 text-center hover-card h-100 bg-light rounded-4 transition">
-              <img src="/images/profile.svg" alt="Manage Your Profile" className="card-img-top mx-auto mt-4" style={{ width: '80px' }} />
-              <div className="card-body d-flex flex-column px-4 py-4">
-                <h5 className="card-title fw-semibold">Manage Your Profile</h5>
-                <p className="text-muted small">Update your personal information, contact details, and health preferences.</p>
-                <button className="btn btn-outline-primary mt-auto w-100" onClick={() => navigate('/profile')}>
-                  Go to Profile
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Consultation History Card */}
-          <div className="col-md-5">
-            <div className="card shadow-sm border-0 text-center hover-card h-100 bg-light rounded-4 transition">
-              <div className="card-body d-flex flex-column px-4 py-4">
-                <img src="/images/history.svg" alt="Consultation History" className="mb-3 mx-auto" style={{ width: '70px' }} />
-                <h5 className="card-title fw-semibold">Recent Consultations</h5>
-                <ul className="list-group list-group-flush text-start mt-3 mb-3">
-                  {appointments.slice(0, 3).map((appt, idx) => (
-                    <li key={idx} className="list-group-item border-0 ps-0 small">
-                      <strong>{new Date(appt.date).toLocaleDateString()}</strong> – {appt.type} with <em>{appt.doctor}</em>
-                      <span className={`badge bg-${appt.status === 'confirmed' ? 'success' : 'warning'} float-end`}>{appt.status}</span>
-                    </li>
-                  ))}
-                  {appointments.length === 0 && (
-                    <li className="list-group-item border-0 text-muted ps-0 small">No recent consultations found.</li>
-                  )}
-                </ul>
-                <button className="btn btn-outline-primary mt-auto w-100" onClick={() => navigate('/consultation/history')}>
-                  View Full History
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Health Tips */}
-      <section className="mt-5 p-4 rounded shadow-sm bg-white">
-        <h2 className="text-center text-success mb-4">Health Tips for You</h2>
-        <ul className="list-group list-group-flush fs-6">
-          <li className="list-group-item">🥤 Stay hydrated with at least 8 glasses of water.</li>
-          <li className="list-group-item">🏃‍♂️ Exercise for 30 minutes daily to stay active.</li>
-          <li className="list-group-item">🛌 Sleep for 7-8 hours to help your body recover.</li>
-        </ul>
-      </section>
     </div>
+      <Footer/>
+      </div>
   );
 };
 
 export default UserHome;
-

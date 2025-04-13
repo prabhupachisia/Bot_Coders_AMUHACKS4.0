@@ -92,8 +92,8 @@ const Navbar = () => {
                 Consultations
               </button>
               <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
-                <li><Link className="dropdown-item" to="/new-consultation">New Consultation</Link></li>
-                <li><Link className="dropdown-item" to="/history">History</Link></li>
+                <li><Link className="dropdown-item" to="/user-home">New Consultation</Link></li>
+                <li><Link className="dropdown-item" to="/user-home">History</Link></li>
               </ul>
             </li>
 
