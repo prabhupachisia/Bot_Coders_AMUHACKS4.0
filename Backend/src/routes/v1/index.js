@@ -28,6 +28,9 @@ const defaultRoutes = [
   }, {
     path: '/prescription',
     route: prescriptionRoute,
+  }, {
+    path: '/hospital',
+    route: require('./hospital.route'),
   }
 ];
 

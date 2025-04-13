@@ -18,7 +18,7 @@ router
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 
-  const getMe = async (req, res) => {
+const getMe = async (req, res) => {
   try {
     // Assuming you have a userId available from the authenticated user in the request
     const user = await User.findById(req.user.id); // req.user is added by the auth middleware
