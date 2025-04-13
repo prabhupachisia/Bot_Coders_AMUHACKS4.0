@@ -22,9 +22,18 @@ const Navbar = () => {
   };
 
   // Handle login by setting user data in localStorage and updating state
-  const handleLogin = (userData) => {
-    localStorage.setItem('user', JSON.stringify(userData)); // Save user data to localStorage
-    setUser(userData); // Update user state to reflect login
+//   const handleLogin = (userData) => {
+//     localStorage.setItem('user', JSON.stringify(userData)); // Save user data to localStorage
+//     setUser(userData); // Update user state to reflect login
+//   };
+
+  // Handle Dashboard redirection (user must be logged in)
+  const handleDashboardClick = () => {
+    if (!user) {
+      navigate('/login'); // If no user is logged in, redirect to login page
+    } else {
+      navigate('/user-profile'); // Redirect to user profile page if logged in
+    }
   };
 
   return (
@@ -171,9 +180,9 @@ const Navbar = () => {
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
                 <li>
-                  <Link className="dropdown-item" to="/dashboard">
+                  <button className="dropdown-item" onClick={handleDashboardClick}>
                     Dashboard
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <Link className="dropdown-item" to="/settings">
@@ -184,7 +193,7 @@ const Navbar = () => {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="#" onClick={handleLogout}>
+                  <Link className="dropdown-item" to="/" onClick={handleLogout}>
                     Logout
                   </Link>
                 </li>

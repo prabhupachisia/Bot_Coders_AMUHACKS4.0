@@ -1,152 +1,84 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
-  const [formData, setFormData] = useState({});
-  const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState('');
-
-  const accessToken = JSON.parse(localStorage.getItem('tokens'))?.access?.token;
-  const userId = JSON.parse(localStorage.getItem('user'))?.id;
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!accessToken || !userId) {
-        setStatus('No user data found. Please login again.');
-        setLoading(false);
-        return;
-      }
-      try {
-        const response = await axios.get(`/api/user/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setUser(response.data);
-        setFormData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        setStatus('Failed to load user data.');
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [userId, accessToken]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToken"));
+  
+  // Memoize getUserProfile using useCallback to avoid redefinition on every render
+  const getUserProfile = useCallback(async () => {
     try {
-      const response = await axios.put(`/api/user/update`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+      // Send request to the backend to fetch the user profile
+      const response = await axios.get("http://localhost:5000/v1/users/profile", {
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       setUser(response.data);
-      setFormData(response.data);
-      setStatus('Profile updated successfully!');
-      setEditMode(false);
     } catch (error) {
-      console.error('Update failed:', error);
-      setStatus('Failed to update profile.');
+      if (error.response && error.response.status === 403) {
+        setErrorMessage("You don't have permission to access this resource.");
+      } else {
+        setErrorMessage("Failed to load user profile");
+      }
+      console.error(error);
     }
-  };
+  }, [accessToken]); // Depend on accessToken
 
-  if (loading) {
-    return (
-      <div className="text-center my-5">
-        <div className="spinner-border text-primary" role="status" />
-      </div>
-    );
-  }
+  // Memoize refreshAccessToken using useCallback to avoid redefinition on every render
+  const refreshAccessToken = useCallback(async () => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) {
+      setErrorMessage("No refresh token found.");
+      return;
+    }
 
-  if (!user) {
-    return (
-      <div className="text-center mt-5">
-        <p>{status}</p>
-      </div>
-    );
-  }
+    try {
+      // Send request to refresh the access token using the refresh token
+      const response = await axios.post("http://localhost:5000/v1/auth/refresh-tokens", { refreshToken });
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+      
+      // Update tokens in state and localStorage
+      localStorage.setItem("accessToken", newAccessToken);
+      localStorage.setItem("refreshToken", newRefreshToken);
+      setAccessToken(newAccessToken); // This will trigger useEffect
+      localStorage.setItem("accessTokenExpiration", new Date(Date.now() + 3600 * 1000));
+      
+      // Explicitly call getUserProfile with new token
+      await axios.get("http://localhost:5000/v1/users/profile", {
+        headers: { Authorization: `Bearer ${newAccessToken}` }
+      }).then(res => setUser(res.data))
+        .catch(err => {
+          setErrorMessage("Failed to load user profile after refresh");
+          console.error(err);
+        });
+    } catch (error) {
+      setErrorMessage("Failed to refresh token");
+      console.error(error);
+    }
+  }, []); // Ensure the memoized version is used
+
+  useEffect(() => {
+    // Check if access token has expired
+    const tokenExpiration = localStorage.getItem("accessTokenExpiration");
+    if (tokenExpiration && new Date(tokenExpiration) < new Date()) {
+      refreshAccessToken();
+    } else if (accessToken) {
+      getUserProfile();
+    }
+  }, [accessToken, getUserProfile, refreshAccessToken]);  // Add these dependencies to ensure proper rerendering
 
   return (
-    <div className="container mt-5">
-      <div className="card shadow p-4 border-0 rounded-4">
-        <h2 className="mb-4 text-center">User Profile</h2>
-        {status && <div className="alert alert-info text-center">{status}</div>}
-
-        {!editMode ? (
-          <>
-            <div className="row">
-              {[
-                { label: 'Name', value: user.name },
-                { label: 'Email', value: user.email },
-                { label: 'Phone', value: user.phone },
-                { label: 'Role', value: user.role },
-                { label: 'Street', value: user.street },
-                { label: 'City', value: user.city },
-                { label: 'State', value: user.state },
-                { label: 'Country', value: user.country },
-                { label: 'Pin Code', value: user.pinCode },
-              ].map((item, i) => (
-                <div className="col-md-6 mb-3" key={i}>
-                  <strong>{item.label}</strong>
-                  <div className="form-control bg-light">{item.value}</div>
-                </div>
-              ))}
-            </div>
-            <div className="text-center mt-4">
-              <button className="btn btn-primary px-4" onClick={() => setEditMode(true)}>Edit Profile</button>
-            </div>
-          </>
-        ) : (
-          <form onSubmit={handleUpdate}>
-            <div className="row">
-              {[
-                'name', 'email', 'phone', 'street', 'city', 'state', 'country', 'pinCode'
-              ].map((field, i) => (
-                <div className="col-md-6 mb-3" key={i}>
-                  <label className="form-label text-capitalize">{field}</label>
-                  <input
-                    type={field === 'email' ? 'email' : 'text'}
-                    className="form-control"
-                    name={field}
-                    value={formData[field] || ''}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              ))}
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Role</label>
-                <select
-                  name="role"
-                  className="form-select"
-                  value={formData.role}
-                  onChange={handleChange}
-                >
-                  <option value="patient">Patient</option>
-                  <option value="admin">Admin</option>
-                  <option value="doctor">Doctor</option>
-                  <option value="hospital">Hospital</option>
-                </select>
-              </div>
-            </div>
-            <div className="text-center mt-4">
-              <button className="btn btn-success me-2" type="submit">Save Changes</button>
-              <button className="btn btn-secondary" type="button" onClick={() => setEditMode(false)}>Cancel</button>
-            </div>
-          </form>
-        )}
-      </div>
+    <div>
+      <h1>User Profile</h1>
+      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+      {user ? (
+        <div>
+          <h3>{user.name}</h3>
+          <p>{user.email}</p>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };

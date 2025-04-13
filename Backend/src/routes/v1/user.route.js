@@ -17,6 +17,19 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+
+  const getMe = async (req, res) => {
+  try {
+    // Assuming you have a userId available from the authenticated user in the request
+    const user = await User.findById(req.user.id); // req.user is added by the auth middleware
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).send({ message: 'Server error' });
+  }
+};
 module.exports = router;
 
 /**

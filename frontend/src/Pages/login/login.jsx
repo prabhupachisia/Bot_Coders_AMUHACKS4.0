@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const primaryColor = "#17a2b8";
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Load remembered email and password on mount
+  // Load remembered credentials
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     const savedPassword = localStorage.getItem("rememberedPassword");
@@ -27,7 +29,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Save or clear remembered credentials based on checkbox
+    // Save or clear remembered credentials
     if (rememberMe) {
       localStorage.setItem("rememberedEmail", email);
       localStorage.setItem("rememberedPassword", password);
@@ -52,7 +54,9 @@ const Login = () => {
         localStorage.setItem("refreshToken", tokens.refresh.token);
         localStorage.setItem("accessTokenExpiration", new Date(tokens.access.expires));
 
-        window.location.href = "/";
+        // ✅ Redirect to UserHome
+        navigate("/user-home");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Login failed", error.response || error);
