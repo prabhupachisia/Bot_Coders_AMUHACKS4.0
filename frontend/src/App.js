@@ -16,7 +16,9 @@ import DocTreat from './Pages/Doctor/DocTreat';
 import UserDocCon from './Pages/User/UserDocCon/UserDocCon';  // Add this file
 import Footer from './Components/Footer/Footer';
 import UserHosCon from './Pages/User/UserHosCon/UserHosCon';  // Add this file
+import HosPat from './Pages/Hospital/HosPat';
 import HosDocList from './Pages/HosDocList/HosDocList';
+import HosPatView from './Pages/Hospital/HosPatView';
 import DocList from './Pages/Hospital/DocList';
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
           <Route path="/consultation/doctor" element={<UserDocCon />} />
           <Route path="/consultation/hospital" element={<UserHosCon />} />
           <Route path="/hospital/:id/doctors" element={<HosDocList />} />
+          <Route path="/hospital/patients" element={<HosPat />} />
+          <Route path="/patient/:PatientId" element={<HosPatView />} />
           <Route path="/hospital/doctors" element={<DocList />} />
         </Routes>
       </div>

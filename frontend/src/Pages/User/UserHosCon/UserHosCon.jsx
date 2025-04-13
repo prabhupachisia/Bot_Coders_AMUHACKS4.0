@@ -4,12 +4,23 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./UserHosCon.css";
 
+<<<<<<< Updated upstream
 const capitalizeWords = (str) =>
   str
     .toLowerCase()
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+=======
+const capitalizeWords = (str) => {
+    if (typeof str !== 'string') return '';
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+  
+>>>>>>> Stashed changes
 
 const AvailableHospitals = () => {
   const navigate = useNavigate();
@@ -72,9 +83,41 @@ const AvailableHospitals = () => {
             bring you the most trusted hospitals at your fingertips.
           </p>
 
+<<<<<<< Updated upstream
           {loading && (
             <div className="text-center">
               <div className="spinner-border text-primary" role="status"></div>
+=======
+      {loading && (
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status"></div>
+        </div>
+      )}
+
+      {error && <div className="alert alert-warning text-center">{error}</div>}
+
+      <div className="row gy-4">
+        {hospitals.map((hospital) => (
+          <div key={hospital.id} className="col-md-6 col-lg-4">
+            <div className="card h-100 shadow-sm rounded-4">
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title fw-semibold text-primary">
+                  {hospital.name}
+                </h5>
+                <p className="mb-1">
+                <strong>Location: </strong> 
+                {capitalizeWords(hospital.city)},{capitalizeWords(hospital.state)},  {capitalizeWords(hospital.country)}
+                     
+                </p>
+                <p></p>
+                <button
+                  className="btn btn-success mt-auto w-100 rounded-pill"
+                  onClick={() => handleRegister(hospital.id)}
+                >
+                  Register for Consultation
+                </button>
+              </div>
+>>>>>>> Stashed changes
             </div>
           )}
 
