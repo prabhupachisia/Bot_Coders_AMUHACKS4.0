@@ -24,6 +24,8 @@ const createUser = {
     state: Joi.string().required(),
     country: Joi.string().required(),
     pinCode: Joi.string().required(),
+    gender: Joi.string(),
+    age: Joi.number(),
   }),
 };
 
@@ -64,6 +66,8 @@ const updateUser = {
       state: Joi.string(),
       country: Joi.string(),
       pinCode: Joi.string(),
+      gender: Joi.string(),
+      age: Joi.number()
     })
     .min(1), // At least one field must be provided to update
 };

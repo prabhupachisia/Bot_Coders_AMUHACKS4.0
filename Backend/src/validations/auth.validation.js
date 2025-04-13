@@ -14,6 +14,8 @@ const register = {
     state: Joi.string().required(),
     country: Joi.string().required(),
     pinCode: Joi.string().required(),
+    gender: Joi.string(),
+    age: Joi.number(),
   }),
 };
 
