@@ -14,11 +14,7 @@ const HospitalRegister = () => {
     state: '',
     country: '',
     pinCode: '',
-    hospitalName: '',
-    hospitalType: '',
-    numberOfBeds: '',
-    facilities: '',
-    details: '',
+    role:'hospital'
   });
 
   const handleChange = (e) => {
@@ -32,11 +28,23 @@ const HospitalRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/hospitals/register', formData);
-      alert('Hospital registered successfully');
+      await axios.post('http://localhost:5000/v1/auth/register', formData);
+      alert('Hospital registered successfully!');
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        street: '',
+        city: '',
+        state: '',
+        country: '',
+        pinCode: '',
+        role: 'hospital',
+      });
     } catch (err) {
       console.error(err);
-      alert('Error registering hospital');
+      alert('Registration failed. Please try again.');
     }
   };
 
@@ -51,7 +59,7 @@ const HospitalRegister = () => {
 
                 {/* Basic Information */}
                 <h5 className="mt-4 text-secondary fw-semibold">Basic Information</h5>
-                
+
                 <Row className="mb-3 align-items-center">
                   <Col md={4}>
                     <Form.Label className="form-label-left">Hospital Name</Form.Label>
