@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MdPerson, MdMedicalServices, MdOutlineVisibility } from "react-icons/md";
+import {
+  MdPerson,
+  MdMedicalServices,
+  MdOutlineVisibility,
+} from "react-icons/md";
 import { FaUserMd, FaRegAddressCard } from "react-icons/fa";
 
 const DocHome = () => {
@@ -44,7 +48,6 @@ const DocHome = () => {
 
         console.log("Extracted Patients: ", extractedPatients);
         setPatients(extractedPatients);
-
       } catch (err) {
         console.error("Failed to fetch consults:", err);
         if (err.response?.status === 401) {
@@ -68,19 +71,24 @@ const DocHome = () => {
     navigate("/doctor-profile");
   };
 
-  const handleViewDetails = (patient) => {
-    navigate(`/patient-details/${patient.id}`, {
-      state: { patientDetails: patient.fullDetails },
+  const handleTreatPatient = (consultId, patient) => {
+    navigate(`/doctor/treat/${consultId}`, {
+      state: { patientDetails: patient.fullDetails }, // Pass patient details to DocTreat
     });
   };
 
   // ✅ Replaced handleTreatPatient function from old DocHome
-  const handleTreatPatient = (consultId) => {
-    navigate(`/doctor/treat/${consultId}`);
+  const handleViewDetails = (consultId) => {
+    navigate(`/doctor/view/${consultId}`);
   };
 
   return (
-    <div className="container py-5" style={{ background: "linear-gradient(to bottom right, #e3f2fd, #ffffff)" }}>
+    <div
+      className="container py-5"
+      style={{
+        background: "linear-gradient(to bottom right, #e3f2fd, #ffffff)",
+      }}
+    >
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text-primary d-flex align-items-center gap-2">
           <FaUserMd size={32} />
@@ -106,19 +114,20 @@ const DocHome = () => {
                     <FaRegAddressCard /> Age: {patient.age}
                   </p>
                   <p className="card-text text-muted d-flex align-items-center gap-2">
-                    <MdMedicalServices /> Issue: {patient.problemSummary || "Not Provided"}
+                    <MdMedicalServices /> Issue:{" "}
+                    {patient.problemSummary || "Not Provided"}
                   </p>
 
                   <div className="mt-auto d-flex gap-2">
                     <button
                       className="btn btn-outline-primary w-50 d-flex align-items-center justify-content-center"
-                      onClick={() =>handleTreatPatient(patient.id) }
+                      onClick={() => handleViewDetails(patient.id)}
                     >
                       <MdOutlineVisibility className="me-1" /> View
                     </button>
                     <button
                       className="btn btn-success w-50"
-                      onClick={() => handleViewDetails(patient)}
+                      onClick={() => handleTreatPatient(patient.id, patient)}
                     >
                       Treat
                     </button>
