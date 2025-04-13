@@ -15,7 +15,7 @@ const prescriptionSchema = mongoose.Schema(
         },
         consultation: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Consultation',
+            ref: 'Consult',
             required: true, // Required field for linking to a consultation
         },
         description: {

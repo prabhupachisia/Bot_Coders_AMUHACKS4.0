@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { Prescription, Consult } = require('../models');
+const { Prescription, Consult, Doctor } = require('../models');
 
 // Create a new prescription (still requires consultation ID)
 const createPrescription = catchAsync(async (req, res) => {
@@ -12,11 +12,11 @@ const createPrescription = catchAsync(async (req, res) => {
         return res.status(httpStatus.NOT_FOUND).send({ message: 'Consultation not found' });
     }
 
-
+    const doctor = Doctor.findOne({ details: req.user.id });
     const prescription = await Prescription.create({
         ...req.body,
         consultation: consultationId,
-        doctor: req.user.id,
+        doctor: doctor._id,
         patient: consultation.patient // Get patient from consultation
     });
 
