@@ -17,6 +17,8 @@ const createDoctor = {
         state: Joi.string().required(),
         country: Joi.string().required(),
         pinCode: Joi.string().required(),
+        gender:Joi.string().required(),
+        age:Joi.number().required(),
 
         // Doctor fields
         specialization: Joi.string().required().valid(...specializations),

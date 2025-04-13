@@ -23,6 +23,8 @@ const DocRegister = () => {
     email: "",
     password: "",
     phone: "",
+    gender: "",   // added
+    age: "",      // added
     street: "",
     city: "",
     state: "",
@@ -33,6 +35,7 @@ const DocRegister = () => {
     education: "",
     fees: "",
   });
+  
 
   // Function to handle input changes
   const handleChange = (e) => {
@@ -135,6 +138,36 @@ const DocRegister = () => {
             required
           />
         </InputGroup>
+
+        
+
+        <InputGroup className="mb-3">
+          <InputGroup.Text>Gender</InputGroup.Text>
+          <Form.Select
+            name="gender"
+            value={formData.gender || ''}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </Form.Select>
+        </InputGroup>
+
+        <InputGroup className="mb-3">
+          <InputGroup.Text>Age</InputGroup.Text>
+          <Form.Control
+            type="number"
+            name="age"
+            placeholder="Age"
+            value={formData.age || ''}
+            onChange={handleChange}
+            required
+          />
+        </InputGroup>
+
 
         {/* Address */}
         <h4 className="section-heading">📍 Address</h4>
