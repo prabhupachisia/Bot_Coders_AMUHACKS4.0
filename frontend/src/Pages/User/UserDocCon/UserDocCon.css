@@ -1,0 +1,16 @@
+.user-doc-bg {
+    background: linear-gradient(to bottom right, #e6f0ff, #f9fbff);
+    min-height: 100vh;
+  }
+  
+  .doctor-card {
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    background-color: white;
+  }
+  
+  .doctor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+  }
+  
