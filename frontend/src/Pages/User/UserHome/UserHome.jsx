@@ -15,6 +15,8 @@ const UserHome = () => {
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     const accessTokenExpiration = localStorage.getItem('accessTokenExpiration');
+    const userData = localStorage.getItem('user');
+
     const isTokenValid =
       accessToken &&
       accessTokenExpiration &&
@@ -27,12 +29,18 @@ const UserHome = () => {
 
     const fetchData = async () => {
       try {
-        const [profileRes, consultsRes] = await Promise.all([
-          axios.get('http://localhost:5000/v1/users/me', { headers: { Authorization: `Bearer ${accessToken}` } }),
-          axios.get('http://localhost:5000/v1/consults', { headers: { Authorization: `Bearer ${accessToken}` } })
-        ]);
-    
-        setUser(profileRes.data);
+        // Parse user data from localStorage
+        if (userData) {
+          setUser(JSON.parse(userData));
+        } else {
+          throw new Error('User data not found in localStorage.');
+        }
+
+        // Fetch consultations
+        const consultsRes = await axios.get('http://localhost:5000/v1/consult', {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
         setAppointments(consultsRes.data.map(consult => ({
           date: consult.date,
           type: consult.type,
@@ -43,21 +51,21 @@ const UserHome = () => {
       } catch (err) {
         console.error(err);
         setError('Unable to connect to the server. Showing demo data.');
-    
+
         // Demo fallback data
         setUser({ name: 'Demo User' });
         setAppointments([
-          { 
-            date: '2025-04-15T10:00:00', 
-            type: 'Dental Checkup', 
-            doctor: 'Dr. Smith', 
-            status: 'confirmed' 
+          {
+            date: '2025-04-15T10:00:00',
+            type: 'Dental Checkup',
+            doctor: 'Dr. Smith',
+            status: 'confirmed'
           },
-          { 
-            date: '2025-04-20T14:30:00', 
-            type: 'Eye Checkup', 
-            doctor: 'Dr. Watson', 
-            status: 'pending' 
+          {
+            date: '2025-04-20T14:30:00',
+            type: 'Eye Checkup',
+            doctor: 'Dr. Watson',
+            status: 'pending'
           }
         ]);
         setConsultations([
@@ -68,8 +76,6 @@ const UserHome = () => {
         setLoading(false);
       }
     };
-    
-    
 
     fetchData();
   }, [navigate]);
@@ -159,7 +165,7 @@ const UserHome = () => {
                 hour: '2-digit',
                 minute: '2-digit'
               })} - {appt.type} with {appt.doctor}
-              <span className={`badge bg-${appt.status === 'Confirmed' ? 'success' : 'warning'} rounded-pill`}>
+              <span className={`badge bg-${appt.status.toLowerCase() === 'confirmed' ? 'success' : 'warning'} rounded-pill`}>
                 {appt.status}
               </span>
             </li>
