@@ -7,11 +7,16 @@ import {
   Button,
   Alert,
   Spinner,
-  Badge
+  Badge,
 } from "react-bootstrap";
-import { FaTimesCircle, FaCheckCircle } from "react-icons/fa";
+import {
+  FaTimesCircle,
+  FaCheckCircle,
+  FaFilePrescription,
+} from "react-icons/fa";
 
-const placeholderImage = "https://via.placeholder.com/150?text=No+Image";
+const placeholderImage = "https://picsum.photos/150?grayscale";
+
 
 const UserMedicRec = () => {
   const [consultations, setConsultations] = useState([]);
@@ -37,8 +42,34 @@ const UserMedicRec = () => {
 
         if (!response.ok) throw new Error("Failed to fetch consultations");
 
-        const data = await response.json();
-        setConsultations(data);
+        const consults = await response.json();
+
+        // Fetch prescriptions for completed consultations
+        const enriched = await Promise.all(
+          consults.map(async (consult) => {
+            if (consult.status === "complete") {
+              try {
+                const presRes = await fetch(
+                  `http://localhost:5000/v1/prescription/consultations/${consult.id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+
+                if (presRes.ok) {
+                  const data = await presRes.json();
+                  return { ...consult, prescription: data.prescription };
+                }
+              } catch (_) { }
+            }
+            return consult;
+          })
+        );
+
+        setConsultations(enriched);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -72,7 +103,9 @@ const UserMedicRec = () => {
       if (!response.ok) throw new Error("Cancellation failed");
 
       setConsultations((prev) =>
-        prev.filter((consult) => consult.id !== consultId)
+        prev.map((c) =>
+          c.id === consultId ? { ...c, status: "cancelled" } : c
+        )
       );
     } catch (err) {
       setError(err.message);
@@ -105,10 +138,15 @@ const UserMedicRec = () => {
                   <span className="fw-semibold text-primary">
                     Consultation #{consult.id.slice(-6)}
                   </span>
-                  <Badge bg={
-                    consult.status === "complete" ? "success" :
-                      consult.status === "cancelled" ? "secondary" : "warning"
-                  }>
+                  <Badge
+                    bg={
+                      consult.status === "complete"
+                        ? "success"
+                        : consult.status === "cancelled"
+                          ? "secondary"
+                          : "warning"
+                    }
+                  >
                     {consult.status}
                   </Badge>
                 </Card.Header>
@@ -122,19 +160,20 @@ const UserMedicRec = () => {
                   <div className="mb-3">
                     <strong>Photos:</strong>
                     <Row className="mt-2 g-2 justify-content-center">
-                      {(consult.photos && consult.photos.length > 0 ? consult.photos : [placeholderImage]).map(
-                        (photo, index) => (
-                          <Col xs={4} key={index} className="d-flex justify-content-center">
-                            <img
-                              src={photo}
-                              alt={`Consultation ${index + 1}`}
-                              className="img-fluid rounded border"
-                              style={{ height: "80px", objectFit: "cover" }}
-                              onError={(e) => (e.target.src = placeholderImage)}
-                            />
-                          </Col>
-                        )
-                      )}
+                      {(consult.photos?.length
+                        ? consult.photos
+                        : [placeholderImage]
+                      ).map((photo, index) => (
+                        <Col xs={4} key={index} className="d-flex justify-content-center">
+                          <img
+                            src={photo}
+                            alt={`Photo ${index + 1}`}
+                            className="img-fluid rounded border"
+                            style={{ height: "80px", objectFit: "cover" }}
+                            onError={(e) => (e.target.src = placeholderImage)}
+                          />
+                        </Col>
+                      ))}
                     </Row>
                   </div>
 
@@ -142,14 +181,32 @@ const UserMedicRec = () => {
                     <strong>Doctor:</strong>
                     <p className="mb-1">Name: {consult.doctor.details.name}</p>
                     <p className="mb-1">Specialization: {consult.doctor.specialization}</p>
+
+                    {consult.status === "complete" && consult.prescription && (
+                      <Alert variant="light" className="mt-2 p-2 border-start border-success border-4">
+                        <FaFilePrescription className="me-2 text-success" />
+                        <strong>Prescription:</strong>
+                        <div className="mt-2">
+                          {consult.prescription.startsWith("http") ? (
+                            <a
+                              href={consult.prescription}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View / Download Prescription
+                            </a>
+                          ) : (
+                            <p className="mb-0 text-dark">{consult.prescription}</p>
+                          )}
+                        </div>
+                      </Alert>
+                    )}
                   </div>
 
                   <div className="mb-2">
                     <strong>Patient:</strong>
                     <p className="mb-1">Name: {consult.patient.name}</p>
-                    <p className="mb-1">
-                      Location: {consult.patient.city}, {consult.patient.state}
-                    </p>
+                    <p className="mb-1">Location: {consult.patient.city}, {consult.patient.state}</p>
                   </div>
 
                   <small className="text-muted">
@@ -157,22 +214,22 @@ const UserMedicRec = () => {
                   </small>
 
                   <div className="mt-auto d-grid">
-                    <Button
-                      variant={consult.status === "complete" ? "outline-success" : "outline-danger"}
-                      disabled={consult.status === "complete"}
-                      onClick={() => handleCancelConsult(consult.id)}
-                    >
-                      {consult.status === "complete" ? (
-                        <>
-                          <FaCheckCircle className="me-2" /> Completed
-                        </>
-                      ) : (
-                        <>
-                          <FaTimesCircle className="me-2" /> Cancel Consult
-                        </>
-                      )}
-                    </Button>
+                    {consult.status === "complete" && (
+                      <Button variant="outline-success" disabled>
+                        <FaCheckCircle className="me-2" /> Completed
+                      </Button>
+                    )}
+
+                    {consult.status === "pending" && (
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => handleCancelConsult(consult.id)}
+                      >
+                        <FaTimesCircle className="me-2" /> Cancel Consult
+                      </Button>
+                    )}
                   </div>
+
                 </Card.Body>
               </Card>
             </Col>
