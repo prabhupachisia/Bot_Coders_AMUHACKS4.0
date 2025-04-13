@@ -24,13 +24,17 @@ import ConForm from './Pages/User/UserHosCon/ConsForm';
 import UserMedicRec from './Pages/User/UserMedicalRecords/UserMedicRec';
 import AboutUs from './Pages/AboutUs/AboutUs';
 import ContactUs from './Pages/ContactUs/ContactUs';
+import Footer from './Components/Footer/Footer';
 
 
 function App() {
   return (
     <Router>
-      <div className="App">
+       <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
+        <div style={{ flex: '1' }}>
+
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -58,6 +62,9 @@ function App() {
           <Route path="/contact" element={<ContactUs />} />
           
         </Routes>
+        </div>
+        
+        <Footer />
       </div>
     </Router>
   );

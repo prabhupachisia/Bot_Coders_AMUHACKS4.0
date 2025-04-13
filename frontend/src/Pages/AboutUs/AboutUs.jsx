@@ -1,9 +1,48 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'animate.css';
-import './AboutUs.css'; // Optional: custom styling if needed
+import './AboutUs.css';
 
 const AboutUs = () => {
+  const features = [
+    {
+      title: 'Nearby Hospital Consultations',
+      desc: 'Quickly find and consult with trusted hospitals near you with real-time availability.'
+    },
+    {
+      title: 'Personal Doctor Appointments',
+      desc: 'Consult directly with your preferred doctor online and get continuous personalized care.'
+    },
+    {
+      title: 'Secure User Authentication',
+      desc: 'Safe and reliable login system with role-based access for patients, doctors, and hospitals.'
+    },
+    {
+      title: 'Smart Booking System',
+      desc: 'Easily book, reschedule, or cancel appointments with just a few clicks.'
+    },
+    {
+      title: 'Review & Rating System',
+      desc: 'See real patient reviews and ratings to make informed healthcare decisions.'
+    },
+    {
+      title: 'Responsive & Modern UI',
+      desc: 'Built with the latest technologies to deliver a smooth experience on any device.'
+    },
+    {
+      title: 'Hospital Admin Dashboard',
+      desc: 'Hospitals can efficiently manage their doctors, schedules, appointments, and patient interactions from one place.'
+    },
+    {
+      title: 'Doctor-Friendly Interface',
+      desc: 'Doctors can securely access patient records, histories, and health reports to provide accurate consultations.'
+    },
+    {
+      title: 'AI-Powered Eye Diagnosis',
+      desc: 'Upload an image of your eye, and our machine learning model predicts conditions like cataract, glaucoma, diabetic retinopathy, and more.'
+    }
+  ];
+
   return (
     <div className="about-wrapper bg-light text-dark">
       {/* Hero Section */}
@@ -47,32 +86,7 @@ const AboutUs = () => {
         <div className="container text-center">
           <h2 className="fw-bold mb-4 animate__animated animate__fadeInUp">What We Offer</h2>
           <div className="row g-4">
-            {[
-              {
-                title: 'Nearby Hospital Consultations',
-                desc: 'Quickly find and consult with trusted hospitals near you with real-time availability.'
-              },
-              {
-                title: 'Personal Doctor Appointments',
-                desc: 'Consult directly with your preferred doctor online and get continuous personalized care.'
-              },
-              {
-                title: 'Secure User Authentication',
-                desc: 'Safe and reliable login system with role-based access for patients, doctors, and hospitals.'
-              },
-              {
-                title: 'Smart Booking System',
-                desc: 'Easily book, reschedule, or cancel appointments with just a few clicks.'
-              },
-              {
-                title: 'Review & Rating System',
-                desc: 'See real patient reviews and ratings to make informed healthcare decisions.'
-              },
-              {
-                title: 'Responsive & Modern UI',
-                desc: 'Built with the latest technologies to deliver a smooth experience on any device.'
-              }
-            ].map((feature, index) => (
+            {features.map((feature, index) => (
               <div className="col-md-4 animate__animated animate__zoomIn" key={index}>
                 <div className="card shadow-sm h-100 p-4">
                   <h5 className="fw-bold">{feature.title}</h5>
@@ -122,8 +136,6 @@ const AboutUs = () => {
           </a>
         </div>
       </section>
-
-      
     </div>
   );
 };
