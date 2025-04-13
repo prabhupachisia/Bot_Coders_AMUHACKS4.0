@@ -1,21 +1,33 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { Doctor, User, Consult } = require('../models'); // Adjust the path as needed
+const { Doctor, User, Consult } = require('../models');
+const { Types: { ObjectId } } = require('mongoose');
+const { isValidObjectId } = require('mongoose');
+const mongoose = require('mongoose');
+// Adjust the path as needed
 
 /**
  * Get all doctors related to a specific hospital
  */
 const getDoctorsByHospital = catchAsync(async (req, res) => {
-    const { hospitalId } = req.params; // Extract hospital ID from request parameters
+    const { hospitalId } = req.params;
 
-    // Fetch all doctors related to the hospital
-    const doctors = await Doctor.find({ hospital: hospitalId }).populate('details', 'name email'); // Populate 'details' field if needed
+    // Validate hospitalId format
+    if (!isValidObjectId(hospitalId)) {
+        return res.status(400).send({ message: 'Invalid hospital ID' });
+    }
+    // Convert to ObjectId
+    const hospitalObjectId = new mongoose.Types.ObjectId(hospitalId);
 
-    if (!doctors || doctors.length === 0) {
-        return res.status(httpStatus.NOT_FOUND).send({ message: 'No doctors found for this hospital' });
+    // Query doctors
+    const doctors = await Doctor.find({ hospital: hospitalObjectId })
+        .populate('details', 'name email');
+
+    if (!doctors?.length) {
+        return res.status(404).send({ message: 'No doctors found' });
     }
 
-    res.status(httpStatus.OK).send({ doctors });
+    res.status(200).send({ doctors });
 });
 
 const getAllHospitals = catchAsync(async (req, res) => {
