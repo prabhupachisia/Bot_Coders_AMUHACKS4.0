@@ -1,7 +1,41 @@
 import React from "react";
-import "animate.css";  // Make sure animate.css is installed or included in your project
+import "animate.css";
+import { useNavigate } from "react-router-dom";
 
 const ConsultationOptions = () => {
+  const navigate = useNavigate();
+
+  const handleRedirect = (type) => {
+    const token = localStorage.getItem("accessToken");
+    const tokenExpiry = localStorage.getItem("accessTokenExpiration");
+    const userData = localStorage.getItem("user");
+
+    const isTokenValid =
+      token &&
+      tokenExpiry &&
+      new Date(tokenExpiry) > new Date();
+
+    if (!isTokenValid) {
+      navigate("/login");
+    } else {
+      try {
+        const parsedUser = JSON.parse(userData);
+        if (parsedUser?.role === "patient") {
+          if (type === "hospital") {
+            navigate("/consultation/hospital");
+          } else if (type === "doctor") {
+            navigate("/consultation/doctor");
+          }
+        } else {
+          alert("Access restricted to patients only.");
+        }
+      } catch (err) {
+        console.error("Error parsing user data:", err);
+        navigate("/login");
+      }
+    }
+  };
+
   return (
     <section className="consultation-section py-5 bg-white">
       <div className="container">
@@ -10,15 +44,29 @@ const ConsultationOptions = () => {
           <div className="col-md-6 mb-3 animate__animated animate__fadeInLeft">
             <div className="card shadow-sm p-4 h-100">
               <h4>Consult Hospital Near You</h4>
-              <p className="text-muted">Choose from our network of trusted hospitals around your area.</p>
-              <a href="/hospital-consultation" className="btn btn-outline-primary">Find Hospitals</a>
+              <p className="text-muted">
+                Choose from our network of trusted hospitals around your area.
+              </p>
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => handleRedirect("hospital")}
+              >
+                Find Hospitals
+              </button>
             </div>
           </div>
           <div className="col-md-6 mb-3 animate__animated animate__fadeInRight">
             <div className="card shadow-sm p-4 h-100">
               <h4>Personal Doctor Consultation</h4>
-              <p className="text-muted">Get personal care and follow-up from your preferred doctor.</p>
-              <a href="/personal-consultation" className="btn btn-outline-success">Consult Now</a>
+              <p className="text-muted">
+                Get personal care and follow-up from your preferred doctor.
+              </p>
+              <button
+                className="btn btn-outline-success"
+                onClick={() => handleRedirect("doctor")}
+              >
+                Consult Now
+              </button>
             </div>
           </div>
         </div>

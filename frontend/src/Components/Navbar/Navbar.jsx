@@ -102,7 +102,7 @@ const Navbar = () => {
             )}
 
             <li className="nav-item">
-              <Link className="nav-link" to="/services" style={{ color: '#333' }}>About Us</Link>
+              <Link className="nav-link" to="/aboutus" style={{ color: '#333' }}>About Us</Link>
             </li>
 
             <li className="nav-item">

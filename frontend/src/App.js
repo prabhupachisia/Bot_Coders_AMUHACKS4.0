@@ -22,6 +22,8 @@ import DocList from './Pages/Hospital/DocList';
 import ConsultationForm from "./Pages/User/UserDocCon/ConsultationForm";
 import ConForm from './Pages/User/UserHosCon/ConsForm';
 import UserMedicRec from './Pages/User/UserMedicalRecords/UserMedicRec';
+import AboutUs from './Pages/AboutUs/AboutUs';
+import ContactUs from './Pages/ContactUs/ContactUs';
 
 
 function App() {
@@ -52,6 +54,9 @@ function App() {
           <Route path="/consult/:doctorId" element={<ConForm />} />
           <Route path="/doctor/register" element={<DocRegister />} />
           <Route path="/patient/consults" element={<UserMedicRec />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/contact" element={<ContactUs />} />
+          
         </Routes>
       </div>
     </Router>
