@@ -1,23 +1,38 @@
 .user-doc-bg {
-  background: #f9f9fb;
+  background: #f5f9ff;
+  min-height: 100vh;
 }
 
-.doctor-card {
-  background: white;
-  border-radius: 15px;
-  transition: all 0.3s ease;
+.hospital-card {
+  background: #ffffff;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #eaeaea;
 }
 
-.doctor-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(0, 123, 255, 0.1);
+.hospital-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.1);
 }
 
 .glassy-effect {
-  backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(200, 200, 200, 0.2);
 }
 
-.cta-banner {
-  background: linear-gradient(to right, #007bff, #00c6ff);
+.badge {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.4em 0.6em;
+}
+
+.btn-outline-primary {
+  border-width: 2px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
 }

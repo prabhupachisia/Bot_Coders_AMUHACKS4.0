@@ -13,36 +13,69 @@ import {
 import "./HosDocList.css";
 
 const HosDocList = () => {
-  const { id: hospitalId } = useParams(); // Get hospital ID from route
+  const { id: hospitalId } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const token = localStorage.getItem("accessToken"); // adjust key if named differently
-  
+        const token = localStorage.getItem("accessToken");
+
         const res = await axios.get(`http://localhost:5000/v1/hospital/${hospitalId}/doctors`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-  
-        setDoctors(res.data);
+
+        console.log("Fetched doctor data:", res.data);
+
+        // Ensure we're setting an array no matter what
+        const fetchedDoctors = Array.isArray(res.data)
+          ? res.data
+          : Array.isArray(res.data.doctors)
+          ? res.data.doctors
+          : [];
+
+        setDoctors(fetchedDoctors);
       } catch (error) {
         console.error("Error fetching doctors, using demo data instead.");
-  
-        // Demo data if API fails
-        const demoDoctors = [ /* ... your existing demo data ... */ ];
+
+        const demoDoctors = [
+          {
+            id: 1,
+            specialization: "Cardiology",
+            education: "MBBS, MD",
+            experience: 10,
+            details: {
+              name: "John Doe",
+              phone: "1234567890",
+              city: "New York",
+              state: "NY",
+            },
+          },
+          {
+            id: 2,
+            specialization: "Neurology",
+            education: "MBBS, DM",
+            experience: 8,
+            details: {
+              name: "Jane Smith",
+              phone: "0987654321",
+              city: "Los Angeles",
+              state: "CA",
+            },
+          },
+        ];
+
         setDoctors(demoDoctors);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchDoctors();
   }, [hospitalId]);
-  
 
   const handleConsult = (doctorId) => {
     console.log(`Consulting doctor with ID: ${doctorId}`);
@@ -71,32 +104,32 @@ const HosDocList = () => {
                     <Card.Body>
                       <Card.Title className="mb-3">
                         <FaUserMd className="me-2 text-primary" />
-                        Dr. {details.name}
+                        Dr. {details?.name || "Unknown"}
                       </Card.Title>
 
                       <Card.Text>
                         <FaStethoscope className="me-2 text-muted" />
-                        <strong>Specialization:</strong> {doc.specialization}
+                        <strong>Specialization:</strong> {doc.specialization || "N/A"}
                       </Card.Text>
 
                       <Card.Text>
                         <FaGraduationCap className="me-2 text-muted" />
-                        <strong>Education:</strong> {doc.education}
+                        <strong>Education:</strong> {doc.education || "N/A"}
                       </Card.Text>
 
                       <Card.Text>
                         <FaClock className="me-2 text-muted" />
-                        <strong>Experience:</strong> {doc.experience} years
+                        <strong>Experience:</strong> {doc.experience || "N/A"} years
                       </Card.Text>
 
                       <Card.Text>
                         <FaPhone className="me-2 text-muted" />
-                        <strong>Phone:</strong> {details.phone}
+                        <strong>Phone:</strong> {details?.phone || "N/A"}
                       </Card.Text>
 
                       <Card.Text>
                         <FaMapMarkerAlt className="me-2 text-muted" />
-                        <strong>Location:</strong> {details.city}, {details.state}
+                        <strong>Location:</strong> {details?.city || "N/A"}, {details?.state || "N/A"}
                       </Card.Text>
 
                       <Button
