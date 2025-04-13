@@ -21,7 +21,7 @@ const getDoctorsByHospital = catchAsync(async (req, res) => {
 
     // Query doctors
     const doctors = await Doctor.find({ hospital: hospitalObjectId })
-        .populate('details', 'name email');
+        .populate('details');
 
     if (doctors.length==0) {
         return res.status(404).send({ message: 'No doctors found' });
