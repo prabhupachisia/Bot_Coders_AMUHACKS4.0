@@ -81,6 +81,10 @@ const deleteDoctor = catchAsync(async (req, res) => {
     if (!doctor) {
         return res.status(httpStatus.NOT_FOUND).send({ message: 'Doctor not found' });
     }
+    const user = await User.findByIdAndDelete(doctor.details);
+    if (!user) {
+        return res.status(httpStatus.NOT_FOUND).send({ message: 'User not found' });
+    }
     res.status(httpStatus.NO_CONTENT).send();
 });
 

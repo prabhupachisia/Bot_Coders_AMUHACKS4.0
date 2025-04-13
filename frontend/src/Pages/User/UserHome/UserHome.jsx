@@ -46,12 +46,14 @@ const UserHome = () => {
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
 
-        const recentAppointments = sortedConsults.slice(0, 5).map((consult) => ({
-          date: consult.createdAt,
-          type: consult.description, // Using description as type
-          doctor: consult.doctor.details.name, // Access nested doctor name
-          status: consult.status,
-        }));
+        const recentAppointments = sortedConsults
+          .slice(0, 5)
+          .map((consult) => ({
+            date: consult.createdAt,
+            type: consult.description, // Using description as type
+            doctor: consult.doctor.details.name, // Access nested doctor name
+            status: consult.status,
+          }));
 
         setAppointments(recentAppointments);
       } catch (err) {
@@ -164,7 +166,7 @@ const UserHome = () => {
                 </p>
                 <button
                   className="btn btn-outline-primary mt-auto"
-                  onClick={() => navigate("/user-profile")}
+                  onClick={() => navigate("/patient/consults")}
                 >
                   View Records
                 </button>
@@ -224,17 +226,27 @@ const UserHome = () => {
           <h3 className="text-success mb-4 text-center">Health Tips</h3>
           <div className="row">
             {[
-              { tip: "💧 Drink plenty of water daily to stay hydrated.", color: "info" },
-              { tip: "🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.", color: "warning" },
-              { tip: "🛌 Ensure 7–8 hours of sleep for better recovery and focus.", color: "success" },
+              {
+                tip: "💧 Drink plenty of water daily to stay hydrated.",
+                color: "info",
+              },
+              {
+                tip: "🏃‍♀️ 30 minutes of daily exercise keeps your heart healthy.",
+                color: "warning",
+              },
+              {
+                tip: "🛌 Ensure 7–8 hours of sleep for better recovery and focus.",
+                color: "success",
+              },
             ].map((tipObj, idx) => (
               <div key={idx} className={`col-md-4`}>
-                <div className={`alert alert-${tipObj.color}`}>{tipObj.tip}</div>
+                <div className={`alert alert-${tipObj.color}`}>
+                  {tipObj.tip}
+                </div>
               </div>
             ))}
           </div>
         </section>
-
       </div>
 
       {/* Footer */}
