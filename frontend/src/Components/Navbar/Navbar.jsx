@@ -4,35 +4,44 @@ import { FaUserCircle, FaSearch, FaHeartbeat } from 'react-icons/fa';
 
 const Navbar = () => {
   const [user, setUser] = useState(null); // Track logged-in user state
+  const [role, setRole] = useState(null); // Track role
   const navigate = useNavigate();
 
-  // UseEffect to check if the user is logged in by reading from localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Set user state if user is in localStorage
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setRole(parsedUser.role); // assuming the user object has a 'role' key
     }
-  }, []); // This runs once on mount
+  }, []);
 
-  // Handle logout by clearing user data from localStorage and redirecting to home
   const handleLogout = () => {
-    localStorage.removeItem('user'); // Remove user data from localStorage
-    setUser(null); // Clear user state
-    navigate('/'); // Redirect to home page
+    localStorage.removeItem('user');
+    setUser(null);
+    setRole(null);
+    navigate('/');
   };
 
-  // Handle login by setting user data in localStorage and updating state
-//   const handleLogin = (userData) => {
-//     localStorage.setItem('user', JSON.stringify(userData)); // Save user data to localStorage
-//     setUser(userData); // Update user state to reflect login
-//   };
-
-  // Handle Dashboard redirection (user must be logged in)
   const handleDashboardClick = () => {
     if (!user) {
-      navigate('/login'); // If no user is logged in, redirect to login page
+      navigate('/login');
     } else {
-      navigate('/user-profile'); // Redirect to user profile page if logged in
+      navigate('/user-profile');
+    }
+  };
+
+  const handleHomeClick = () => {
+    if (user && role) {
+      if (role === 'doctor') {
+        navigate('/doctor-home');
+      } else if (role === 'hospital') {
+        navigate('/hospital-home');
+      } else {
+        navigate('/user-home');
+      }
+    } else {
+      navigate('/');
     }
   };
 
@@ -42,17 +51,16 @@ const Navbar = () => {
       style={{ backgroundColor: '#f9fdfd', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}
     >
       <div className="container-fluid">
-        {/* Logo */}
         <Link
           className="navbar-brand d-flex align-items-center"
           to="/"
+          onClick={handleHomeClick}
           style={{ color: '#0d6efd', fontWeight: 'bold', fontSize: '1.5rem', textDecoration: 'none' }}
         >
           <FaHeartbeat className="me-2" style={{ color: '#0d6efd' }} />
           CareConnect
         </Link>
 
-        {/* Toggle Button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -65,17 +73,14 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navbar Links */}
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* Home */}
             <li className="nav-item">
-              <Link className="nav-link" to="/" style={{ color: '#333' }}>
+              <button className="nav-link btn btn-link" onClick={handleHomeClick} style={{ color: '#333' }}>
                 Home
-              </Link>
+              </button>
             </li>
 
-            {/* Consultations Dropdown */}
             <li className="nav-item dropdown">
               <button
                 className="nav-link dropdown-toggle btn btn-link"
@@ -87,34 +92,19 @@ const Navbar = () => {
                 Consultations
               </button>
               <ul className="dropdown-menu" aria-labelledby="consultationsDropdown">
-                <li>
-                  <Link className="dropdown-item" to="/new-consultation">
-                    New Consultation
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/history">
-                    History
-                  </Link>
-                </li>
+                <li><Link className="dropdown-item" to="/new-consultation">New Consultation</Link></li>
+                <li><Link className="dropdown-item" to="/history">History</Link></li>
               </ul>
             </li>
 
-            {/* Services */}
             <li className="nav-item">
-              <Link className="nav-link" to="/services" style={{ color: '#333' }}>
-                Services
-              </Link>
+              <Link className="nav-link" to="/services" style={{ color: '#333' }}>Services</Link>
             </li>
 
-            {/* Contact */}
             <li className="nav-item">
-              <Link className="nav-link" to="/contact" style={{ color: '#333' }}>
-                Contact
-              </Link>
+              <Link className="nav-link" to="/contact" style={{ color: '#333' }}>Contact</Link>
             </li>
 
-            {/* Render Career Links only if not logged in */}
             {!user && (
               <li className="nav-item dropdown">
                 <button
@@ -127,46 +117,24 @@ const Navbar = () => {
                   Careers
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="careersDropdown">
-                  <li>
-                    <Link className="dropdown-item" to="/careers/doctor-reg">
-                      Doctor
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/careers/hospitals-reg">
-                      Hospitals
-                    </Link>
-                  </li>
+                  <li><Link className="dropdown-item" to="/careers/doctor-reg">Doctor</Link></li>
+                  <li><Link className="dropdown-item" to="/careers/hospitals-reg">Hospitals</Link></li>
                 </ul>
               </li>
             )}
           </ul>
 
-          {/* Search */}
           <form className="d-flex me-3" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search doctors..."
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-primary" type="submit">
-              <FaSearch />
-            </button>
+            <input className="form-control me-2" type="search" placeholder="Search doctors..." aria-label="Search" />
+            <button className="btn btn-outline-primary" type="submit"><FaSearch /></button>
           </form>
 
-          {/* Show Login and Register Links if user is logged out */}
           {!user ? (
             <div className="d-flex gap-2 me-3">
-              <Link to="/login" className="btn btn-outline-success">
-                Login
-              </Link>
-              <Link to="/register" className="btn btn-outline-primary">
-                Register
-              </Link>
+              <Link to="/login" className="btn btn-outline-success">Login</Link>
+              <Link to="/register" className="btn btn-outline-primary">Register</Link>
             </div>
           ) : (
-            // Profile Dropdown for Logged-In User
             <div className="dropdown">
               <button
                 className="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
@@ -176,27 +144,13 @@ const Navbar = () => {
                 aria-expanded="false"
               >
                 <FaUserCircle className="me-2" size={20} />
-                {user.username || 'Profile'} {/* Display username or default text */}
+                {user.username || 'Profile'}
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li>
-                  <button className="dropdown-item" onClick={handleDashboardClick}>
-                    Dashboard
-                  </button>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/settings">
-                    Settings
-                  </Link>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/" onClick={handleLogout}>
-                    Logout
-                  </Link>
-                </li>
+                <li><button className="dropdown-item" onClick={handleDashboardClick}>Dashboard</button></li>
+                <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
+                <li><hr className="dropdown-divider" /></li>
+                <li><Link className="dropdown-item" to="/" onClick={handleLogout}>Logout</Link></li>
               </ul>
             </div>
           )}
