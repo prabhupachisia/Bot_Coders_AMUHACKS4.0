@@ -85,10 +85,10 @@ const DocList = () => {
         fetchDoctors();
     }, []);
 
-    const handleConsult = (doctorId) => {
-        console.log(`Consulting doctor with ID: ${doctorId}`);
-        alert("Consult request sent to doctor!");
-    };
+    // const handleConsult = (doctorId) => {
+    //     console.log(`Consulting doctor with ID: ${doctorId}`);
+    //     alert("Consult request sent to doctor!");
+    // };
 
     if (loading) {
         return (
@@ -152,14 +152,6 @@ const DocList = () => {
                                             <strong>Location:</strong>{" "}
                                             {doctor.details.city}, {doctor.details.state}
                                         </Card.Text>
-
-                                        <Button
-                                            variant="outline-primary"
-                                            className="w-100 mt-3"
-                                            onClick={() => handleConsult(doctor.id)}
-                                        >
-                                            Consult
-                                        </Button>
                                     </Card.Body>
                                 </Card>
                             </Col>
