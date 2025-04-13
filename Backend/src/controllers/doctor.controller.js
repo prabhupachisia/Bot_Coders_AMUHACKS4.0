@@ -1,16 +1,56 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const {Doctor} = require('../models');
+const { Doctor, User } = require('../models');
 
 const createDoctor = catchAsync(async (req, res) => {
-    const { hospitalId } = req.params;
-    const doctorBody = {
-        ...req.body,
-        hospital: hospitalId,
-    };
-    const doctor = await Doctor.create(doctorBody);
+    const { hospitalId } = req.params; // Hospital ID from route params
+    const userData = req.body; // User data and doctor data combined in the request body
+
+    // Extract user fields and doctor fields from request body
+    const {
+        name,
+        email,
+        password,
+        phone,
+        street,
+        city,
+        state,
+        country,
+        pinCode,
+        specialization,
+        experience,
+        education,
+        fees,
+    } = userData;
+
+    // Create a new user (role: 'doctor')
+    const user = await User.create({
+        name,
+        email,
+        password,
+        phone,
+        street,
+        city,
+        state,
+        country,
+        pinCode,
+        role: 'doctor', // Set role to 'doctor'
+    });
+
+    // Create a new doctor record with reference to the user and hospital
+    const doctor = await Doctor.create({
+        hospital: hospitalId, // Reference to hospital
+        specialization,
+        experience,
+        education,
+        fees,
+        details: user._id, // Reference to created user
+    });
+
     res.status(httpStatus.CREATED).send(doctor);
 });
+
+
 
 const getAllDoctors = catchAsync(async (req, res) => {
     const doctors = await Doctor.find().populate('hospital details');

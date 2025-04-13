@@ -1,28 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Form, Container, Row, Col, InputGroup } from 'react-bootstrap';
-import { FaUserMd, FaEnvelope, FaLock, FaPhone, FaHospital, FaGraduationCap, FaStethoscope, FaMoneyBill, FaInfoCircle } from 'react-icons/fa';
-import axios from 'axios';
-import './DocRegister.css';
+import React, { useState } from "react";
+import { Button, Form, Container, Row, Col, InputGroup } from "react-bootstrap";
+import {
+  FaUserMd,
+  FaEnvelope,
+  FaLock,
+  FaPhone,
+  FaGraduationCap,
+  FaStethoscope,
+  FaMoneyBill,
+} from "react-icons/fa";
+import axios from "axios";
+import "./DocRegister.css";
+
+// Import the specializations array
+import specializations from "../../config/doctors";
+import { useNavigate } from "react-router-dom";
 
 const DocRegister = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    street: '',
-    city: '',
-    state: '',
-    country: '',
-    pinCode: '',
-    hospital: '',
-    specialization: '',
-    experience: '',
-    education: '',
-    fees: '',
-    details: '',
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    country: "",
+    pinCode: "",
+    specialization: "",
+    experience: "",
+    education: "",
+    fees: "",
   });
 
+  // Function to handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -31,26 +43,47 @@ const DocRegister = () => {
     }));
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await axios.post('/api/doctors/register', formData);
-      alert('Doctor registered successfully');
+      // Get hospitalId from localStorage or fallback to default
+      const user = JSON.parse(localStorage.getItem("user"));
+      const hospitalId = user?.id || "67fb6b4daec134dda70de5ae";
+
+      // Construct API payload
+      const payload = {
+        ...formData,
+      };
+
+      // Make API call
+      await axios.post(
+        `http://localhost:5000/v1/doctors/${hospitalId}`,
+        payload
+      );
+
+      alert("Doctor registered successfully");
+      navigate("/");
     } catch (err) {
       console.error(err);
-      alert('Error registering doctor');
+      alert("Error registering doctor");
     }
   };
 
   return (
     <Container className="form-container shadow-lg rounded-4 p-5 mt-5 bg-white">
-      <h2 className="text-center mb-4 text-primary fw-bold">Doctor Registration</h2>
+      <h2 className="text-center mb-4 text-primary fw-bold">
+        Doctor Registration
+      </h2>
       <Form onSubmit={handleSubmit}>
         {/* User Info */}
         <h4 className="section-heading">👤 Personal Information</h4>
 
         <InputGroup className="mb-3">
-          <InputGroup.Text><FaUserMd /></InputGroup.Text>
+          <InputGroup.Text>
+            <FaUserMd />
+          </InputGroup.Text>
           <Form.Control
             type="text"
             name="name"
@@ -62,7 +95,9 @@ const DocRegister = () => {
         </InputGroup>
 
         <InputGroup className="mb-3">
-          <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+          <InputGroup.Text>
+            <FaEnvelope />
+          </InputGroup.Text>
           <Form.Control
             type="email"
             name="email"
@@ -74,7 +109,9 @@ const DocRegister = () => {
         </InputGroup>
 
         <InputGroup className="mb-3">
-          <InputGroup.Text><FaLock /></InputGroup.Text>
+          <InputGroup.Text>
+            <FaLock />
+          </InputGroup.Text>
           <Form.Control
             type="password"
             name="password"
@@ -86,7 +123,9 @@ const DocRegister = () => {
         </InputGroup>
 
         <InputGroup className="mb-3">
-          <InputGroup.Text><FaPhone /></InputGroup.Text>
+          <InputGroup.Text>
+            <FaPhone />
+          </InputGroup.Text>
           <Form.Control
             type="text"
             name="phone"
@@ -168,17 +207,7 @@ const DocRegister = () => {
         {/* Doctor Info */}
         <h4 className="section-heading">🏥 Doctor Information</h4>
 
-        <InputGroup className="mb-3">
-          <InputGroup.Text><FaHospital /></InputGroup.Text>
-          <Form.Control
-            type="text"
-            name="hospital"
-            placeholder="Hospital Name"
-            value={formData.hospital}
-            onChange={handleChange}
-          />
-        </InputGroup>
-
+        {/* Specialization Dropdown */}
         <Form.Group className="mb-3">
           <Form.Select
             name="specialization"
@@ -187,31 +216,21 @@ const DocRegister = () => {
             required
           >
             <option value="">Select Specialization</option>
-            <option>Pediatricians</option>
-            <option>Geriatricians</option>
-            <option>Family Physicians</option>
-            <option>Cardiologists</option>
-            <option>Dermatologists</option>
-            <option>Neurologists</option>
-            <option>Orthopedic Surgeons</option>
-            <option>Psychiatrists</option>
-            <option>Ophthalmologists</option>
-            <option>Dentists</option>
-            <option>Gynecologists</option>
-            <option>Endocrinologists</option>
-            <option>Gastroenterologists</option>
-            <option>Pulmonologists</option>
-            <option>Urologists</option>
-            <option>Hematologists</option>
-            <option>Oncologists</option>
-            <option>Rheumatologists</option>
+            {specializations.map((specialization) => (
+              <option key={specialization} value={specialization}>
+                {specialization}
+              </option>
+            ))}
           </Form.Select>
         </Form.Group>
 
+        {/* Experience and Education */}
         <Row>
           <Col md={6}>
             <InputGroup className="mb-3">
-              <InputGroup.Text><FaStethoscope /></InputGroup.Text>
+              <InputGroup.Text>
+                <FaStethoscope />
+              </InputGroup.Text>
               <Form.Control
                 type="number"
                 name="experience"
@@ -224,7 +243,9 @@ const DocRegister = () => {
           </Col>
           <Col md={6}>
             <InputGroup className="mb-3">
-              <InputGroup.Text><FaGraduationCap /></InputGroup.Text>
+              <InputGroup.Text>
+                <FaGraduationCap />
+              </InputGroup.Text>
               <Form.Control
                 type="text"
                 name="education"
@@ -237,8 +258,11 @@ const DocRegister = () => {
           </Col>
         </Row>
 
+        {/* Fees */}
         <InputGroup className="mb-3">
-          <InputGroup.Text><FaMoneyBill /></InputGroup.Text>
+          <InputGroup.Text>
+            <FaMoneyBill />
+          </InputGroup.Text>
           <Form.Control
             type="number"
             name="fees"
@@ -249,21 +273,13 @@ const DocRegister = () => {
           />
         </InputGroup>
 
-        <InputGroup className="mb-4">
-          <InputGroup.Text><FaInfoCircle /></InputGroup.Text>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="details"
-            placeholder="Additional Details"
-            value={formData.details}
-            onChange={handleChange}
-            required
-          />
-        </InputGroup>
-
-        <Button variant="primary" type="submit" className="w-100 py-2 fw-semibold">
-          Register
+        {/* Submit Button */}
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-100 py-2 fw-semibold"
+        >
+          Register Doctor
         </Button>
       </Form>
     </Container>

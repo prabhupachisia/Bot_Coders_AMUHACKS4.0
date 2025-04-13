@@ -7,13 +7,25 @@ const createDoctor = {
         hospitalId: Joi.string().custom(objectId).required(),
     }),
     body: Joi.object().keys({
+        // User fields
+        name: Joi.string().required(),
+        email: Joi.string().required().email(),
+        password: Joi.string().required().min(8),
+        phone: Joi.string().required(),
+        street: Joi.string().required(),
+        city: Joi.string().required(),
+        state: Joi.string().required(),
+        country: Joi.string().required(),
+        pinCode: Joi.string().required(),
+
+        // Doctor fields
         specialization: Joi.string().required().valid(...specializations),
         experience: Joi.number().required(),
         education: Joi.string().required(),
         fees: Joi.number().required(),
-        details: Joi.string().custom(objectId).required(),
     }),
 };
+
 
 const getDoctorById = {
     params: Joi.object().keys({
