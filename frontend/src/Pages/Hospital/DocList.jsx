@@ -8,12 +8,16 @@ import {
     FaStethoscope,
     FaPhone,
     FaMapMarkerAlt,
+    FaPlusCircle,
+    FaTrashAlt,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "../HosDocList/HosDocList.css";
 
 const DocList = () => {
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDoctors = async () => {
@@ -35,7 +39,6 @@ const DocList = () => {
                     }
                 );
 
-                // Handle different response structures
                 const responseData = response.data;
                 let doctorsData = [];
 
@@ -50,7 +53,6 @@ const DocList = () => {
                 setDoctors(doctorsData);
             } catch (error) {
                 console.error("Error fetching doctors:", error.message);
-                // Fallback demo data (ensure it's always an array)
                 setDoctors([
                     {
                         id: 1,
@@ -85,10 +87,13 @@ const DocList = () => {
         fetchDoctors();
     }, []);
 
-    // const handleConsult = (doctorId) => {
-    //     console.log(`Consulting doctor with ID: ${doctorId}`);
-    //     alert("Consult request sent to doctor!");
-    // };
+    const handleAddDoctor = () => {
+        navigate("/doctor/register"); // Adjust path if necessary
+    };
+
+    const handleDeleteDoctor = () => {
+        alert("Feature coming soon: Delete doctor functionality!");
+    };
 
     if (loading) {
         return (
@@ -107,6 +112,29 @@ const DocList = () => {
                 <h2 className="text-center mb-5 text-primary fw-bold">
                     Our Hospital Doctors
                 </h2>
+
+                {/* Flashcard-style action buttons */}
+                <Row className="mb-4 justify-content-center">
+                    <Col md={6}>
+                        <Card className="shadow-lg text-center glass-card p-4">
+                            <Card.Body>
+                                <h5 className="mb-4 text-primary fw-bold">
+                                    Doctor Management
+                                </h5>
+                                <div className="d-flex justify-content-around">
+                                    <Button variant="success" onClick={handleAddDoctor}>
+                                        <FaPlusCircle className="me-2" />
+                                        Add Doctor
+                                    </Button>
+                                    <Button variant="danger" onClick={handleDeleteDoctor}>
+                                        <FaTrashAlt className="me-2" />
+                                        Delete Doctor
+                                    </Button>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
 
                 {doctors.length === 0 ? (
                     <p className="text-center text-muted">

@@ -50,6 +50,8 @@ function App() {
           <Route path="/hospital/doctors" element={<DocList />} />
           <Route path="/consultation/:doctorId" element={<ConsultationForm />} />
           <Route path="/consult/:doctorId" element={<ConForm />} />
+          <Route path="/doctor/register" element={<DocRegister />} />
+
 
         </Routes>
       </div>
