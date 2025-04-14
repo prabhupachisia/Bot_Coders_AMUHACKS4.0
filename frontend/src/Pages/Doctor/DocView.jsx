@@ -62,15 +62,26 @@ const DocView = () => {
 
   const {
     status,
-    photos,
+    photos = [],
     description,
-    patient,
+    patient = {},
     concernType = "General Checkup",
-    age = "N/A",
-    gender = "N/A",
     medicalHistory = "Not provided",
     currentMedications = "Not mentioned",
   } = consultation;
+
+  const {
+    name = "N/A",
+    email = "N/A",
+    phone = "N/A",
+    street = "N/A",
+    city = "N/A",
+    state = "N/A",
+    country = "N/A",
+    pinCode = "N/A",
+    age = "N/A",
+    gender = "N/A",
+  } = patient;
 
   return (
     <div className="container py-5">
@@ -86,15 +97,15 @@ const DocView = () => {
           Personal Information
         </div>
         <div className="card-body">
-          <p><FaUser className="me-2 text-secondary" /> <strong>Name:</strong> {patient.name}</p>
+          <p><FaUser className="me-2 text-secondary" /> <strong>Name:</strong> {name}</p>
           <p><FaBirthdayCake className="me-2 text-secondary" /> <strong>Age:</strong> {age}</p>
           <p><FaVenusMars className="me-2 text-secondary" /> <strong>Gender:</strong> {gender}</p>
-          <p><FaEnvelope className="me-2 text-secondary" /> <strong>Email:</strong> {patient.email}</p>
-          <p><FaPhone className="me-2 text-secondary" /> <strong>Phone:</strong> {patient.phone}</p>
+          <p><FaEnvelope className="me-2 text-secondary" /> <strong>Email:</strong> {email}</p>
+          <p><FaPhone className="me-2 text-secondary" /> <strong>Phone:</strong> {phone}</p>
           <p>
             <FaMapMarkerAlt className="me-2 text-secondary" />
             <strong>Address:</strong>{" "}
-            {`${patient.street}, ${patient.city}, ${patient.state}, ${patient.country} - ${patient.pinCode}`}
+            {`${street}, ${city}, ${state}, ${country} - ${pinCode}`}
           </p>
         </div>
       </div>
@@ -149,20 +160,7 @@ const DocView = () => {
           <FaFileMedical className="me-2" />
           <strong>Status:</strong> {status}
         </h5>
-        <div className="d-flex gap-3 mt-3 mt-md-0">
-          <button
-            className="btn btn-success px-4"
-            onClick={() => alert("✅ Treatment Completed!")}
-          >
-            Mark as Treated
-          </button>
-          <button
-            className="btn btn-outline-danger px-4"
-            onClick={() => alert("❌ Consultation Cancelled!")}
-          >
-            Cancel Consultation
-          </button>
-        </div>
+        
       </div>
     </div>
   );

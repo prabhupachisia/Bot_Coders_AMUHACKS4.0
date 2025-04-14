@@ -207,10 +207,7 @@ const DocTreat = () => {
               ></textarea>
             </div>
 
-            <div className="mb-3" style={{ maxWidth: "300px" }}>
-              <label className="form-label">📅 Follow-up Date (Optional)</label>
-              <input type="date" className="form-control rounded-pill" />
-            </div>
+            
 
             <div className="d-flex justify-content-end gap-3">
               <button

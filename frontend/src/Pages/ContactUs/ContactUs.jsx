@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './ContactUs.css';
-import Footer from '../../Components/Footer/Footer';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({

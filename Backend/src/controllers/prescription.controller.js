@@ -12,7 +12,7 @@ const createPrescription = catchAsync(async (req, res) => {
         return res.status(httpStatus.NOT_FOUND).send({ message: 'Consultation not found' });
     }
 
-    const doctor = Doctor.findOne({ details: req.user.id });
+    const doctor = await Doctor.findOne({ details: req.user.id });
     const prescription = await Prescription.create({
         ...req.body,
         consultation: consultationId,

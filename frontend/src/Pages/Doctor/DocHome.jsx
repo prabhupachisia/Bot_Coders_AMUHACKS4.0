@@ -39,9 +39,10 @@ const DocHome = () => {
 
         // Map all consults to extract patient data
         const extractedPatients = consults.map((consult) => ({
-          id: consult.id, // using consult ID from old DocHome logic
+          id: consult._id || consult.id, // fallback
           name: consult.patient?.name,
-          age: calculateAge(consult.patient?.createdAt),
+          age: consult.patient?.age,
+          gender: consult.patient?.gender,
           problemSummary: consult.description,
           fullDetails: consult.patient,
         }));
@@ -61,11 +62,7 @@ const DocHome = () => {
     fetchConsults();
   }, [navigate]);
 
-  const calculateAge = (createdAt) => {
-    const dob = new Date(createdAt);
-    const ageDifMs = Date.now() - dob.getTime();
-    return new Date(ageDifMs).getUTCFullYear() - 1970;
-  };
+ 
 
   const handleViewProfile = () => {
     navigate("/doctor-profile");
@@ -73,11 +70,10 @@ const DocHome = () => {
 
   const handleTreatPatient = (consultId, patient) => {
     navigate(`/doctor/treat/${consultId}`, {
-      state: { patientDetails: patient.fullDetails }, // Pass patient details to DocTreat
+      state: { patientDetails: patient.fullDetails },
     });
   };
 
-  // ✅ Replaced handleTreatPatient function from old DocHome
   const handleViewDetails = (consultId) => {
     navigate(`/doctor/view/${consultId}`);
   };
@@ -112,6 +108,9 @@ const DocHome = () => {
                   </h5>
                   <p className="card-text text-muted d-flex align-items-center gap-2 mb-1">
                     <FaRegAddressCard /> Age: {patient.age}
+                  </p>
+                  <p className="card-text text-muted d-flex align-items-center gap-2 mb-1">
+                    <FaRegAddressCard /> Gender: {patient.gender || "Not Provided"}
                   </p>
                   <p className="card-text text-muted d-flex align-items-center gap-2">
                     <MdMedicalServices /> Issue:{" "}

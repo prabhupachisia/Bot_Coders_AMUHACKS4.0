@@ -173,38 +173,43 @@ const UserMedicRec = () => {
                   <div className="mb-3">
                     <strong>Photos:</strong>
                     <Row className="mt-2 g-2 justify-content-center">
-                      {(consult.photos?.length ? consult.photos : [placeholderImage]).map(
-                        (photo, index) => (
-                          <Col xs={4} key={index}>
-                            <img
-                              src={photo}
-                              alt={`Photo ${index + 1}`}
-                              className="img-fluid rounded border"
-                              style={{ height: "80px", objectFit: "cover" }}
-                              onError={(e) => (e.target.src = placeholderImage)}
-                            />
-                          </Col>
-                        )
-                      )}
+                      {(consult.photos?.length
+                        ? consult.photos
+                        : [placeholderImage]
+                      ).map((photo, index) => (
+                        <Col xs={4} key={index}>
+                          <img
+                            src={photo}
+                            alt={`Consultation pics ${index + 1}`}
+                            className="img-fluid rounded border"
+                            style={{ height: "80px", objectFit: "cover" }}
+                            onError={(e) => (e.target.src = placeholderImage)}
+                          />
+                        </Col>
+                      ))}
                     </Row>
                   </div>
 
                   <div className="mb-2">
                     <strong>Doctor:</strong>
                     <p>Name: {consult.doctor?.details?.name || "N/A"}</p>
-                    <p>Specialization: {consult.doctor?.specialization || "N/A"}</p>
+                    <p>
+                      Specialization: {consult.doctor?.specialization || "N/A"}
+                    </p>
                   </div>
 
                   <div className="mb-2">
                     <strong>Patient:</strong>
                     <p>Name: {consult.patient?.name || "N/A"}</p>
                     <p>
-                      Location: {consult.patient?.city}, {consult.patient?.state}
+                      Location: {consult.patient?.city},{" "}
+                      {consult.patient?.state}
                     </p>
                   </div>
 
                   <small className="text-muted">
-                    Created on: {new Date(consult.createdAt).toLocaleDateString()}
+                    Created on:{" "}
+                    {new Date(consult.createdAt).toLocaleDateString()}
                   </small>
 
                   <div className="mt-3 d-grid gap-2">
