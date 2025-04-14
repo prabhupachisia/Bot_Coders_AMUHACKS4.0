@@ -15,7 +15,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load model
-model = tf.keras.models.load_model('my_model.keras')
+model = tf.keras.models.load_model('my_model.h5')
 
 # Define your class indices (adjust to match your dataset)
 class_indices = {
